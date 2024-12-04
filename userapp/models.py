@@ -1,11 +1,32 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.core.validators import MinLengthValidator, RegexValidator
+from django.core.validators import RegexValidator
 from account.models import AccountModel
 
-class UserModel(models.Model):
+class UserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        if not password:
+            raise ValueError('Password is required')
+            
+        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        if not password:
+            raise ValueError('Password is required')
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('user_type', 'SUPERADMIN')
+        return self.create_user(email, password, **extra_fields)
+
+class UserModel(AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = [
         ('SUPERADMIN', 'Superadmin'),
-        ('PATIENT', 'Patient'),
+        ('PATIENT', 'Patient'), 
         ('HEALTHCARE_PROVIDER', 'Healthcare Provider'),
         ('TEAMLEAD', 'Teamlead'),
         ('FRIEND', 'Friend'),
@@ -13,10 +34,11 @@ class UserModel(models.Model):
 
     STATUS_CHOICES = [
         ('ACTIVE', 'Active'),
-        ('INACTIVE', 'Inactive'),
+        ('INACTIVE', 'Inactive'), 
         ('SUSPENDED', 'Suspended'),
     ]
 
+    email = models.EmailField(unique=True)
     name = models.CharField(
         max_length=100,
         validators=[
@@ -26,24 +48,17 @@ class UserModel(models.Model):
             )
         ]
     )
-    email = models.EmailField(
-        unique=True,
-        error_messages={
-            'unique': 'An account with this email already exists',
-            'invalid': 'Please enter a valid email address'
-        }
-    )
     account_id = models.ForeignKey(
-        AccountModel, 
-        on_delete=models.CASCADE, 
-        related_name='account', 
-        null=True, 
+        AccountModel,
+        on_delete=models.CASCADE,
+        related_name='account',
+        null=True,
         blank=True
     )
     team_leader_id = models.CharField(
-        max_length=100, 
-        default=None, 
-        null=True,
+        max_length=100,
+        default=None,
+        null=True, 
         blank=True
     )
     phone = models.CharField(
@@ -56,7 +71,7 @@ class UserModel(models.Model):
         ]
     )
     user_type = models.CharField(
-        max_length=50, 
+        max_length=50,
         choices=USER_TYPE_CHOICES,
         default='PATIENT',
         error_messages={
@@ -64,7 +79,7 @@ class UserModel(models.Model):
         }
     )
     profile_picture = models.ImageField(
-        upload_to= 'media/',
+        upload_to='media/',
         null=True,
         blank=True,
         max_length=255,
@@ -74,14 +89,14 @@ class UserModel(models.Model):
         },
     )
     language_preference = models.CharField(
-        max_length=10, 
-        default='en', 
-        blank=True, 
+        max_length=10,
+        default='en',
+        blank=True,
         null=True
     )
     status = models.CharField(
-        max_length=50, 
-        choices=STATUS_CHOICES, 
+        max_length=50,
+        choices=STATUS_CHOICES,
         default='ACTIVE',
         error_messages={
             'invalid_choice': 'Please select a valid status'
@@ -90,27 +105,16 @@ class UserModel(models.Model):
     is_team_leader = models.BooleanField(default=False)
     wly_token = models.BooleanField(default=False)
     is_used_token = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    password = models.CharField(
-        max_length=128,
-        null=False,
-        blank=False,
-        editable=True,
-        error_messages={
-            'required': 'Password is required',
-            'blank': 'Password cannot be blank'
-        },
-        validators=[
-            MinLengthValidator(8, 'Password must be at least 8 characters long'),
-            RegexValidator(
-                regex=r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$',
-                message='Password must contain at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&#)'
-            ),
-        ],
-    )
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'phone']
 
     def __str__(self):
         return self.name

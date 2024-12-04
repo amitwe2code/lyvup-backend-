@@ -47,6 +47,9 @@ class LoginView(APIView):
 
           
             refresh = RefreshToken.for_user(user)
+            refresh['user_id'] = user.id  # Explicitly add user ID
+            refresh['email'] = user.email
+            
             return Response({
                 'status': 'success',
                 'code': 'LOGIN_SUCCESS',
@@ -55,7 +58,8 @@ class LoginView(APIView):
                 'data': {
                     'access_token': str(refresh.access_token),
                     'refresh_token': str(refresh),
-                    'user': {
+                    'user_id': user.id,
+                    'user': { 
                         'id': user.id,
                         'email': user.email,
                         'name': user.name if hasattr(user, 'name') else None,

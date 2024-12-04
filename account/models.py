@@ -15,7 +15,7 @@ class AccountModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Account: {self.account_name} (ID: {self.id})"
+        return f"{self.id}"
 
     class Meta:
         db_table = 'account_detail'

@@ -4,18 +4,20 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import UserModel
 from .serializers import UserSerializer
+from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.authentication import JWTAuthentication
+# from .custom_auth import CustomJWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 import os
 
 class UserAPIView(APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def validate_image(self, image):
         """Validate image size and type"""
-        if image.size > 5 * 1024 * 1024:  # 5MB limit
+        if image.size > 5 * 1024 * 1024:
             return {
                 'is_valid': False,
                 'message': 'Profile picture size should not exceed 5MB'
@@ -31,7 +33,6 @@ class UserAPIView(APIView):
         return {'is_valid': True}
 
     def get(self, request, pk=None):
-        """Get all users or single user details"""
         try:
             if pk:
                 # Get single user
@@ -40,7 +41,7 @@ class UserAPIView(APIView):
             else:
                 # Get all users
                 users = UserModel.objects.all()
-                serializer = UserSerializer(users, many=True, context={'request': request})
+                serializer = UserSerializer(users, many=True)
 
             return Response({
                 'status': 'success',
@@ -66,6 +67,7 @@ class UserAPIView(APIView):
         try:
             serializer = UserSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
+                print('request come')
                 # Handle profile picture upload
                 profile_picture = request.FILES.get('profile_picture')
                 if profile_picture:

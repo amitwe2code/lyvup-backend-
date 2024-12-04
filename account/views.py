@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class AccountViewSet(viewsets.ModelViewSet):
-    queryset=AccountModel.objects.all(),
+    queryset=AccountModel.objects.all()
     serializer_class=AccountSerializer
-    authentication_classes =[JWTAuthentication]
-    permission_classes=[IsAuthenticated]
+    # authentication_classes =[JWTAuthentication]
+    # permission_classes=[IsAuthenticated]
