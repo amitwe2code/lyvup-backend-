@@ -56,9 +56,10 @@ class UserAPIView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            print('server error')
             return Response({
                 'status': 'error',
-                'message': str(e),
+                'message': 'there is some server error',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -73,6 +74,7 @@ class UserAPIView(APIView):
                 if profile_picture:
                     validation_result = self.validate_image(profile_picture)
                     if not validation_result['is_valid']:
+                        print('picture validation fail')
                         return Response({
                             'status': 'error',
                             'message': validation_result['message'],
@@ -80,12 +82,13 @@ class UserAPIView(APIView):
                         }, status=status.HTTP_400_BAD_REQUEST)
 
                 user = serializer.save()
+                print('success response')
                 return Response({
                     'status': 'success',
                     'message': 'User created successfully',
                     'data': serializer.data
                 }, status=status.HTTP_201_CREATED)
-            
+            print('any serailizer error')
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -93,6 +96,7 @@ class UserAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
+            print('server error')
             return Response({
                 'status': 'error',
                 'message': str(e),

@@ -36,7 +36,7 @@ class LoginView(APIView):
                     'data': None
                 }, status=status.HTTP_401_UNAUTHORIZED)
 
-            if not password==user.password :
+            if not check_password(password, user.password):
                 return Response({
                     'status': 'error',
                     'code': 'INVALID_CREDENTIALS',
@@ -66,7 +66,7 @@ class LoginView(APIView):
                     }
                 }
             }, status=status.HTTP_200_OK)
-
+                                
         except Exception as e:
             return Response({
                 'status': 'error',
