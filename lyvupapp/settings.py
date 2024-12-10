@@ -25,7 +25,7 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': None,
 }
 
-
+MAILERSEND_API_KEY='mlsn.684ef9ba58d184de3466eee15b2fb75b5d7101e702e9b5e54964d4c6999cfc79'
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -153,3 +153,25 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",  
 ]
     
+
+
+# MailerSend Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailersend.net'  # MailerSend SMTP server
+EMAIL_PORT = 587  # SMTP port for MailerSend
+EMAIL_USE_TLS = True  # TLS encryption
+EMAIL_HOST_USER = 'MS_4Kb1kV@trial-pq3enl6o297l2vwr.mlsender.net'  # Your MailerSend email address
+EMAIL_HOST_PASSWORD = 'hZ7zuW8lfd9deDRR'  # API key as the password
+
+
+# for send email 
+# from django.core.mail import send_mail
+
+# send_mail(
+#     'Subject here',
+#     'Here is the message.',
+#     'your-email@example.com',  # From email address (MailerSend verified)
+#     ['recipient@example.com'],  # To email address
+#     fail_silently=False,
+# )
+# 
