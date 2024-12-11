@@ -79,8 +79,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
             'invalid_choice': 'Please select a valid user type'
         }
     )
-    profile_picture = models.ImageField(
-        upload_to='media/',
+    profile_picture = models.CharField(
+        # upload_to='media/',
         null=True,
         blank=True,
         max_length=255,

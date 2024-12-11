@@ -7,7 +7,7 @@ from userapp.models import UserModel
 from .serializers import LoginSerializer
 from mailersend import emails
 from django.conf import settings
-
+from .mail_service import mail_service
 
 
 
@@ -47,40 +47,15 @@ class LoginView(APIView):
                     'errors': None,
                     'data': None
                 }, status=status.HTTP_401_UNAUTHORIZED)
+            try:
+                print(f"Attempting to send email to: {user.email}")
+                mail_service.send_email()
 
-            mailer = emails.NewEmail('MS_4Kb1kV@trial-pq3enl6o297l2vwr.mlsender.net')
+                print("Email sent successfully")    
+            except Exception as e:
+                print(f"Email sending error: {str(e)}")
+                print(f"Continuing login process despite email error")
 
-            mail_body = {}
-
-            mail_from = {
-                "name": "Sender Name",
-                "email": "amitpatidar.we2code@gmail.com",
-            }
-
-            recipients = [
-                {
-                    "name": "Recipient Name",
-                    "email": "amitpatidar251@gmail.com",
-                }
-            ]
-
-            reply_to = [
-                {
-                    "name": "Reply Name",
-                    "email": "en22ca503028@medicaps.ac.in",
-                }
-            ]
-
-            mailer.set_mail_from(mail_from, mail_body)
-            mailer.set_mail_to(recipients, mail_body)
-            mailer.set_subject("Hello!", mail_body)
-            mailer.set_html_content("Hello, this is an example email from MailerSend", mail_body)
-            mailer.set_plaintext_content("Hello, this is an example email from MailerSend", mail_body)
-            mailer.set_reply_to(reply_to, mail_body)
-
-            response=mailer.send(mail_body)
-            print('response=>',response)
-            print('response come')
             refresh = RefreshToken.for_user(user)
             refresh['user_id'] = user.id  # Explicitly add user ID
             refresh['email'] = user.email

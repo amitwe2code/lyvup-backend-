@@ -25,7 +25,8 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': None,
 }
 
-MAILERSEND_API_KEY='mlsn.684ef9ba58d184de3466eee15b2fb75b5d7101e702e9b5e54964d4c6999cfc79'
+MAILERSEND_API_KEY='mlsn.cacb4b0a16880354a02eef15ee5224ab80b3fa7a29db3e8b73009cac059b72fd'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -79,8 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'lyvup_db',        
-        'USER': 'amit',     
-        'PASSWORD': 'we2code', 
+        'USER': 'postgres',     
+        'PASSWORD': 'sumit007', 
         'HOST': 'localhost',          
         'PORT': '5432',        
     }
@@ -155,23 +156,11 @@ CORS_ALLOWED_ORIGINS = [
     
 
 
-# MailerSend Email Settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailersend.net'  # MailerSend SMTP server
-EMAIL_PORT = 587  # SMTP port for MailerSend
-EMAIL_USE_TLS = True  # TLS encryption
-EMAIL_HOST_USER = 'MS_4Kb1kV@trial-pq3enl6o297l2vwr.mlsender.net'  # Your MailerSend email address
-EMAIL_HOST_PASSWORD = 'hZ7zuW8lfd9deDRR'  # API key as the password
+# # MailerSend Email Settings
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.mailersend.net'  # MailerSend SMTP server
+# EMAIL_PORT = 587  # SMTP port for MailerSend
+# EMAIL_USE_TLS = True  # TLS encryption
+# EMAIL_HOST_USER = 'MS_c3k66C@trial-pq3enl6o297l2vwr.mlsender.net'  # Your MailerSend email address
+# EMAIL_HOST_PASSWORD = 'keJgvvbM2EjQp2Pe'  # API key as the password
 
-
-# for send email 
-# from django.core.mail import send_mail
-
-# send_mail(
-#     'Subject here',
-#     'Here is the message.',
-#     'your-email@example.com',  # From email address (MailerSend verified)
-#     ['recipient@example.com'],  # To email address
-#     fail_silently=False,
-# )
-# 
