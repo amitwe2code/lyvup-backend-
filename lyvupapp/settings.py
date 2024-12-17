@@ -36,11 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'userapp',
     'corsheaders',
+    'rest_framework_simplejwt',
+    'userapp',
     'organization',
     'account',
-    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
@@ -77,22 +77,22 @@ WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'lyvup_db',        
-        'USER': 'postgres',     
-        'PASSWORD': 'sumit007', 
-        'HOST': 'localhost',          
-        'PORT': '5432',        
-    }
-    #   'default': {
+    # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.environ.get('DB_NAME', 'postgres'),
-    #     'USER': os.environ.get('DB_USER', 'postgres'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres123'),
-    #     'HOST': os.environ.get('DB_HOST', 'postgres-service'),
-    #     'PORT': os.environ.get('DB_PORT', '5432'),
+    #     'NAME': 'lyvup_db',        
+    #     'USER': 'postgres',     
+    #     'PASSWORD': 'we2code', 
+    #     'HOST': 'localhost',          
+    #     'PORT': '5432',        
     # }
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'postgres'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres123'),
+        'HOST': os.environ.get('DB_HOST', 'postgres-service'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+    }
 }
 
 
