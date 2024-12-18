@@ -30,7 +30,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         ('PATIENT', 'Patient'), 
         ('HEALTHCARE_PROVIDER', 'Healthcare Provider'),
         ('TEAMLEAD', 'Teamlead'),
-        ('FRIEND', 'Friend'),
+        ('ADMIN', 'Admin'),
     ]
 
     STATUS_CHOICES = [

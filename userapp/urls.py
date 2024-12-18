@@ -5,5 +5,6 @@ from . import views
 
 
 urlpatterns=[
-    path('',views.UserAPIView.as_view())
+    path('',views.UserAPIView.as_view()),
+    path('<int:pk>/', views.UserAPIView.as_view()),
 ]   

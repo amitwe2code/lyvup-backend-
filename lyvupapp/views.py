@@ -72,7 +72,9 @@ class LoginView(APIView):
                     'user': { 
                         'id': user.id,
                         'email': user.email,
-                        'name': user.name if hasattr(user, 'name') else None,
+                        'name': user.name ,
+                        'user_type':user.user_type,
+                        
                     }
                 }
             }, status=status.HTTP_200_OK)

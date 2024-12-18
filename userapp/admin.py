@@ -14,7 +14,6 @@ class Useradmin(UserAdmin):
         ('Important dates', {'fields': ('last_login',)}),
     )
     
-    # नए यूजर बनाने के लिए फ़ील्ड्स
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

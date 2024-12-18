@@ -1,6 +1,6 @@
 from mailersend import emails
 from django.conf import settings
-from mailersend import email_verification
+# from mailersend import email_verification
 from dotenv import load_dotenv
 import os
 class MailerSendService:
@@ -11,6 +11,8 @@ class MailerSendService:
         self.mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
         response=self.mailer.get_all_lists()
         print('res=>',response)
+
+        
     def send_email(self):
         self.mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
@@ -38,7 +40,7 @@ class MailerSendService:
                 "email": "recipient@email.com",
                 "data": {
                     "name": "amit",
-                    "support_email": "amit@gmail.com"
+                    "support_email": "amitpatidar.we2code@gmail.com"
                 }
             }
         ]
@@ -46,10 +48,10 @@ class MailerSendService:
         self.mailer.set_mail_to(recipients, mail_body)
         self.mailer.set_subject("Login Success", mail_body)
         self.mailer.set_html_content("<h1>login success</h1><br/><p>login success now you can perform your task</p>", mail_body)
-        self.mailer.set_template("vywj2lp692q47oqz", mail_body)
+        # self.mailer.set_template("vywj2lp692q47oqz", mail_body)
         self.mailer.set_plaintext_content("This is the text content", mail_body)
         self.mailer.set_reply_to(reply_to, mail_body)
-        self.mailer.set_variables(personalization[0]["data"])
+        # self.mailer.set_variables(personalization[0]["data"])
         self.mailer.send(mail_body)
 
 

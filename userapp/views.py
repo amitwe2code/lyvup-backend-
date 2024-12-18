@@ -66,10 +66,11 @@ class UserAPIView(APIView):
     def post(self, request):
         """Create new user"""
         try:
+            print('request=>',request)
+            print('data=',request.data)
             serializer = UserSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
                 print('request come')
-                # Handle profile picture upload
                 profile_picture = request.FILES.get('profile_picture')
                 if profile_picture:
                     validation_result = self.validate_image(profile_picture)
@@ -114,6 +115,7 @@ class UserAPIView(APIView):
     def _update_user(self, request, pk, partial=False):
         """Helper method for user updates"""
         try:
+            print('pk=',pk)
             user = UserModel.objects.get(pk=pk)
             
             # Handle profile picture update
@@ -157,12 +159,13 @@ class UserAPIView(APIView):
         except Exception as e:
             return Response({
                 'status': 'error',
-                'message': str(e),
+                'message': 'internal error he ',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, pk):
         """Delete user"""
+        print('pk=',pk)
         try:
             user = UserModel.objects.get(pk=pk)
             
