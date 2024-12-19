@@ -7,10 +7,10 @@ class MailerSendService:
     load_dotenv()
 
 
-    def get_all_lists(self):
-        self.mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
-        response=self.mailer.get_all_lists()
-        print('res=>',response)
+    # def get_all_lists(self):
+    #     self.mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
+    #     response=self.mailer.get_all_lists()
+    #     print('res=>',response)
 
         
     def send_email(self):
@@ -35,15 +35,8 @@ class MailerSendService:
             "name": "Name",
             "email": "amitpatidar.we2code@gmail.com",
         }
-        personalization = [
-            {
-                "email": "recipient@email.com",
-                "data": {
-                    "name": "amit",
-                    "support_email": "amitpatidar.we2code@gmail.com"
-                }
-            }
-        ]
+       
+    
         self.mailer.set_mail_from(mail_from, mail_body)
         self.mailer.set_mail_to(recipients, mail_body)
         self.mailer.set_subject("Login Success", mail_body)

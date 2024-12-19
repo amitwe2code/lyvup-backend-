@@ -26,17 +26,14 @@ class UserManager(BaseUserManager):
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = [
-        ('SUPERADMIN', 'Superadmin'),
-        ('PATIENT', 'Patient'), 
-        ('HEALTHCARE_PROVIDER', 'Healthcare Provider'),
-        ('TEAMLEAD', 'Teamlead'),
-        ('ADMIN', 'Admin'),
+        ('patient', 'patient'), 
+        ('admin', 'admin'),
     ]
 
     STATUS_CHOICES = [
-        ('ACTIVE', 'Active'),
-        ('INACTIVE', 'Inactive'), 
-        ('SUSPENDED', 'Suspended'),
+        ('active', 'Active'),
+        ('inactive', 'Inactive'), 
+        ('suspended', 'Suspended'),
     ]
 
     email = models.EmailField(unique=True)
@@ -91,7 +88,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     )
     language_preference = models.CharField(
         max_length=10,
-        default='en',
+        default='English',
         blank=True,
         null=True
     )
@@ -115,7 +112,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'phone','user_type']
+    REQUIRED_FIELDS = ['name', 'phone']
 
     def __str__(self):
         return self.name

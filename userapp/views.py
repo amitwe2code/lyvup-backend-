@@ -7,14 +7,19 @@ from .serializers import UserSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.authentication import JWTAuthentication
 # from .custom_auth import CustomJWTAuthentication
+# from django_filters.rest_framework import DjangoFilterBackend
+# from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
+
 import os
 
 class UserAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
-
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # parser_classes = (MultiPartParser, FormParser)
+    search_fields = ['name', 'email', 'phone','id']
+    ordering_fields = ['name', 'email', 'phone','id']
+    filterset_fields = ['user_type'] 
     def validate_image(self, image):
         """Validate image size and type"""
         if image.size > 5 * 1024 * 1024:
@@ -37,6 +42,7 @@ class UserAPIView(APIView):
             if pk:
                 # Get single user
                 user = UserModel.objects.get(pk=pk)
+           
                 serializer = UserSerializer(user, context={'request': request})
             else:
                 # Get all users
@@ -117,7 +123,7 @@ class UserAPIView(APIView):
         try:
             print('pk=',pk)
             user = UserModel.objects.get(pk=pk)
-            
+            print('user=>',user)
             # Handle profile picture update
             profile_picture = request.FILES.get('profile_picture')
             if profile_picture:
@@ -136,6 +142,7 @@ class UserAPIView(APIView):
                     }, status=status.HTTP_400_BAD_REQUEST)
 
             serializer = UserSerializer(user, data=request.data, partial=partial, context={'request': request})
+            print('serialize',serializer)
             if serializer.is_valid():
                 user = serializer.save()
                 return Response({
