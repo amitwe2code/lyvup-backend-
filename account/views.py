@@ -5,105 +5,82 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .serializer import AccountSerializer
+from .models import AccountModel
+# from .serializer import AccountSerializer
+from .serializers import AccountSerializer
+
+from .pagination import AccountModelPagination 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import SearchFilter
 
 
-
-class CreateAccountView(APIView):
-    serializer_class = AccountSerializer
+class CustomAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+class AccountModelCreate(CustomAPIView):
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AccountListView(APIView):
-    serializer_class = AccountSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
+class AccountModelList(CustomAPIView):
     def get(self, request):
-        accounts = AccountModel.objects.all()  
-        serializer = self.serializer_class(accounts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        accounts = AccountModel.objects.all()
+#search by acc name and acc type
+        account_name = request.query_params.get('account_name', None)
+        if account_name:
+            accounts = accounts.filter(account_name__icontains=account_name)
+        account_type = request.query_params.get('account_type', None)
+        if account_type:
+            accounts = accounts.filter(account_type__icontains=account_type)
+# filter by organization_id if 
+        organization_id = request.query_params.get('organization_id', None)
+        if organization_id is not None:
+            accounts = accounts.filter(organization_id=organization_id)  
+            
+        sort_by = request.query_params.get('sort_by', 'created_at')  
+        sort_order = request.query_params.get('sort_order', 'desc')  
 
+        valid_sort_fields = [f.name for f in AccountModel._meta.fields]
+        if sort_by in valid_sort_fields:
+            if sort_order == 'asc':
+                accounts = accounts.order_by(sort_by)  
+            else:
+                accounts = accounts.order_by(f'-{sort_by}')  
+        else:
+            return Response({"detail": f"Invalid field '{sort_by}' for sorting."}, status=status.HTTP_400_BAD_REQUEST)
 
-class AccountDetailView(APIView):
-    serializer_class = AccountSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
+        paginator = AccountModelPagination()
+        paginated_accounts = paginator.paginate_queryset(accounts, request)
+        serializer =  AccountSerializer(paginated_accounts, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)
+class AccountModelDetail(CustomAPIView):
     def get(self, request, pk):
         try:
             account = AccountModel.objects.get(pk=pk)
-            serializer = self.serializer_class(account)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer =  AccountSerializer(account)
+            return Response(serializer.data)
         except AccountModel.DoesNotExist:
-            return Response({
-                'status': 'error',
-                'message': 'Account not found',
-                'data': None
-            }, status=status.HTTP_404_NOT_FOUND)
-
-
-class AccountUpdateView(APIView):
-    serializer_class = AccountSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
         try:
             account = AccountModel.objects.get(pk=pk)
-            serializer = self.serializer_class(account, data=request.data)
+            serializer =  AccountSerializer(account, data=request.data)
             if serializer.is_valid():
-                serializer.save() 
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                serializer.save()
+                return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except AccountModel.DoesNotExist:
-            return Response({
-                'status': 'error',
-                'message': 'Account not found',
-                'data': None
-            }, status=status.HTTP_404_NOT_FOUND)
-
-    def patch(self, request, pk):
-        try:
-            account = AccountModel.objects.get(pk=pk)
-            serializer = self.serializer_class(account, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()  
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except AccountModel.DoesNotExist:
-            return Response({
-                'status': 'error',
-                'message': 'Account not found',
-                'data': None
-            }, status=status.HTTP_404_NOT_FOUND)
-
-
-class AccountDeleteView(APIView):
-    serializer_class = AccountSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk):
         try:
             account = AccountModel.objects.get(pk=pk)
-            account.delete()  
-            return Response({
-                'status': 'success',
-                'message': 'Account deleted successfully',
-                'data': None
-            }, status=status.HTTP_204_NO_CONTENT)
+            account.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except AccountModel.DoesNotExist:
-            return Response({
-                'status': 'error',
-                'message': 'Account not found',
-                'data': None
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)

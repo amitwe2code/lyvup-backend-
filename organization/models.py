@@ -2,6 +2,7 @@ from django.db import models
 
 
 class OrganizationModel(models.Model):
+    id = models.AutoField(primary_key=True)
     organization_name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     created_by = models.TextField(max_length=100)

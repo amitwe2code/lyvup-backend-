@@ -14,8 +14,8 @@ from lyvupapp.pagination import Pagination
 import os
 
 class UserAPIView(APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
     search_fields = ['name', 'email', 'phone','id']
     ordering_fields = ['name', 'email','id']
@@ -54,13 +54,13 @@ class UserAPIView(APIView):
                 users = UserModel.objects.all()
                 users = DjangoFilterBackend().filter_queryset(request, users, self)
                 users = SearchFilter().filter_queryset(request, users, self)
-                
+                page_size=request.query_params.get('page_size',10)
                 # pagination का सही implementation
                 paginator = self.pagination_class()
                 paginated_users = paginator.paginate_queryset(users, request)
                 
                 serializer = UserSerializer(paginated_users, many=True, context={'request': request})
-                return paginator.get_paginated_response(serializer.data)
+                return paginator.get_paginated_response(serializer.data,page_size)
 
         except UserModel.DoesNotExist:
             return Response({
