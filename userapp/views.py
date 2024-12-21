@@ -7,19 +7,20 @@ from .serializers import UserSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.authentication import JWTAuthentication
 # from .custom_auth import CustomJWTAuthentication
-# from django_filters.rest_framework import DjangoFilterBackend
-# from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-
+from lyvupapp.pagination import Pagination
 import os
 
 class UserAPIView(APIView):
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [IsAuthenticated]
-    # parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser)
     search_fields = ['name', 'email', 'phone','id']
-    ordering_fields = ['name', 'email', 'phone','id']
-    filterset_fields = ['user_type'] 
+    ordering_fields = ['name', 'email','id']
+    filterset_fields = ['user_type','name'] 
+    pagination_class = Pagination
     def validate_image(self, image):
         """Validate image size and type"""
         if image.size > 5 * 1024 * 1024:
@@ -42,18 +43,24 @@ class UserAPIView(APIView):
             if pk:
                 # Get single user
                 user = UserModel.objects.get(pk=pk)
-           
                 serializer = UserSerializer(user, context={'request': request})
+                return Response({
+                    'status': 'success',
+                    'message': 'User retrieved successfully',
+                    'data': serializer.data
+                })
             else:
                 # Get all users
                 users = UserModel.objects.all()
-                serializer = UserSerializer(users, many=True)
-
-            return Response({
-                'status': 'success',
-                'message': 'User(s) retrieved successfully',
-                'data': serializer.data
-            })
+                users = DjangoFilterBackend().filter_queryset(request, users, self)
+                users = SearchFilter().filter_queryset(request, users, self)
+                
+                # pagination का सही implementation
+                paginator = self.pagination_class()
+                paginated_users = paginator.paginate_queryset(users, request)
+                
+                serializer = UserSerializer(paginated_users, many=True, context={'request': request})
+                return paginator.get_paginated_response(serializer.data)
 
         except UserModel.DoesNotExist:
             return Response({
@@ -62,7 +69,7 @@ class UserAPIView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print('server error')
+            print('server error:', str(e))  # एरर को प्रिंट करें
             return Response({
                 'status': 'error',
                 'message': 'there is some server error',

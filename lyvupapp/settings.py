@@ -25,7 +25,7 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': None,
 }
 
-MAILERSEND_API_KEY='mlsn.cacb4b0a16880354a02eef15ee5224ab80b3fa7a29db3e8b73009cac059b72fd'
+MAILERSEND_API_KEY='mlsn.8880e5e887485bc7d73a09b438f8693471c782788308517132713a8361af05be'
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'userapp',
     'organization',
     'account',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
-
+FRONTEND_URL = 'http://localhost:5173/reset/' 
 
 # Database
 DATABASES = {
@@ -147,12 +149,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-    # 'DEFAULT_FILTER_BACKENDS': [
-    #     'django_filters.rest_framework.DjangoFilterBackend',
-    #     'rest_framework.filters.SearchFilter',
-    #     'rest_framework.filters.OrderingFilter',
-    # ],
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 10,
 }
 CORS_ALLOW_ALL_ORIGINS = True
