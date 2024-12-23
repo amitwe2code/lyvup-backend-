@@ -71,7 +71,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(
         max_length=50,
         choices=USER_TYPE_CHOICES,
-        default='PATIENT',
+        default='patient',
         error_messages={
             'invalid_choice': 'Please select a valid user type'
         }
@@ -88,14 +88,14 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     )
     language_preference = models.CharField(
         max_length=10,
-        default='English',
+        default='english',
         blank=True,
         null=True
     )
     status = models.CharField(
         max_length=50,
         choices=STATUS_CHOICES,
-        default='ACTIVE',
+        default='active',
         error_messages={
             'invalid_choice': 'Please select a valid status'
         }

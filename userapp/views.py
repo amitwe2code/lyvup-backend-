@@ -18,7 +18,7 @@ class UserAPIView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
     search_fields = ['name', 'email', 'phone','id']
-    ordering_fields = ['name', 'email','id']
+    ordering_fields = ['name', 'email','id','phone','user_type','created_at','updated_at']
     filterset_fields = ['user_type','name'] 
     pagination_class = Pagination
     def validate_image(self, image):
@@ -54,13 +54,13 @@ class UserAPIView(APIView):
                 users = UserModel.objects.all()
                 users = DjangoFilterBackend().filter_queryset(request, users, self)
                 users = SearchFilter().filter_queryset(request, users, self)
-                page_size=request.query_params.get('page_size',10)
+                users = OrderingFilter().filter_queryset(request, users, self)
                 # pagination का सही implementation
                 paginator = self.pagination_class()
                 paginated_users = paginator.paginate_queryset(users, request)
                 
                 serializer = UserSerializer(paginated_users, many=True, context={'request': request})
-                return paginator.get_paginated_response(serializer.data,page_size)
+                return paginator.get_paginated_response(serializer.data)
 
         except UserModel.DoesNotExist:
             return Response({
