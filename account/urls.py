@@ -1,11 +1,9 @@
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from .views import AccountModelCreate, AccountModelList, AccountModelDetail
-
+from .views import AccountAPIView
 
 
 urlpatterns = [
-    path('create/', AccountModelCreate.as_view(), name='account-create'),
-    path('accounts/', AccountModelList.as_view(), name='account-list'),
-    path('accounts/<int:pk>/', AccountModelDetail.as_view(), name='account-detail'),
+    path('', AccountAPIView.as_view(), name='account-create'),
+    path('<int:pk>/', AccountAPIView.as_view(), name='account-list'),
 ]
