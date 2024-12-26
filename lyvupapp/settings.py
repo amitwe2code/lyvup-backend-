@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'userapp',
     'organization',
     'account',
-    'django_filters'
+    'django_filters',
+    'useraccount',
 ]
 
 MIDDLEWARE = [

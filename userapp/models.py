@@ -28,6 +28,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = [
         ('patient', 'patient'), 
         ('admin', 'admin'),
+        ('superadmin', 'superadmin'),
     ]
 
     STATUS_CHOICES = [

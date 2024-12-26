@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-
+from userapp.serializers import UserSerializer
 
 
 class LoginView(APIView):
@@ -95,6 +95,49 @@ class LoginView(APIView):
                 'code': 'INTERNAL_SERVER_ERROR',
                 'message': 'something goes to wrong',
                 'errors': str(e),
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class SignupView(APIView):
+    def post(self, request):
+        """Create new user"""
+        try:
+            print('request=>',request)
+            print('data=',request.data)
+            serializer = UserSerializer(data=request.data, context={'request': request})
+            if serializer.is_valid():
+                print('request come')
+                profile_picture = request.FILES.get('profile_picture')
+                if profile_picture:
+                    validation_result = self.validate_image(profile_picture)
+                    if not validation_result['is_valid']:
+                        print('picture validation fail')
+                        return Response({
+                            'status': 'error',
+                            'message': validation_result['message'],
+                            'data': None
+                        }, status=status.HTTP_400_BAD_REQUEST)
+
+                user = serializer.save()
+                print('success response')
+                return Response({
+                    'status': 'success',
+                    'message': 'User created successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_201_CREATED)
+            print('any serailizer error')
+            return Response({
+                'status': 'error',
+                'message': 'Validation error',
+                'data': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print('server error')
+            return Response({
+                'status': 'error',
+                'message': str(e),
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
