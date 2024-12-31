@@ -22,6 +22,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('useraccount/',include('useraccount.urls')),
     path('survey/',include('survey.urls')),
+    path('activityapp/',include('activityapp.urls')),
+
 
 ]
 

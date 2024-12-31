@@ -9,13 +9,29 @@ from .models import Intervention
 from .serializers import InterventionSerializer
 from lyvupapp.pagination import Pagination
 
+
 class InterventionAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ['price', 'costs']
-    ordering_fields = ['who', 'price', 'costs', 'created_at', 'updated_at']
-    filterset_fields = ['who', 'intervention_type','price', 'costs', 'id']
+    search_fields = [ 'id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
+        'show_completed', 'location', 'user_duration', 'duration_coach', 
+        'coach_type', 'url', 'amount', 'file', 'upload_possible', 
+        'intervention_description', 'intervention_name', 'show_in_tasks', 
+        'is_active', 'is_deleted', 'created_at', 'updated_at']
+    ordering_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
+        'show_completed', 'location', 'user_duration', 'duration_coach', 
+        'coach_type', 'url', 'amount', 'file', 'upload_possible', 
+        'intervention_description', 'intervention_name', 'show_in_tasks', 
+        'is_active', 'is_deleted', 'created_at', 'updated_at']
+    filterset_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
+        'show_completed', 'location', 'user_duration', 'duration_coach', 
+        'coach_type',  'amount', 
+        'intervention_description', 'intervention_name', 'show_in_tasks', 
+        'is_active', 'is_deleted', 'created_at', 'updated_at']
     pagination_class = Pagination
 
     def get(self, request, pk=None):
@@ -56,6 +72,8 @@ class InterventionAPIView(APIView):
     def post(self, request):
         try:
             data = request.data
+            # data['is_active'] = True
+            # data['is_deleted'] = False
             serializer = InterventionSerializer(data=data, context={'request': request})
 
             if serializer.is_valid():
@@ -85,13 +103,14 @@ class InterventionAPIView(APIView):
 
     def patch(self, request, pk):
         return self._update_intervention(request, pk, partial=True)
-
     def _update_intervention(self, request, pk, partial=False):
         try:
             intervention = Intervention.objects.get(id=pk)
             serializer = InterventionSerializer(intervention, data=request.data, partial=partial, context={'request': request})
 
             if serializer.is_valid():
+                # Set the updated_by field to the current user
+                intervention.updated_by = request.user
                 intervention = serializer.save()
                 return Response({
                     'status': 'success',
@@ -122,7 +141,11 @@ class InterventionAPIView(APIView):
     def delete(self, request, pk):
         try:
             intervention = Intervention.objects.get(id=pk)
-            intervention.delete()
+            # intervention.delete()
+            
+            intervention.is_deleted = 1
+            # intervention.is_active = 0  
+            intervention.save()
             return Response({
                 'status': 'success',
                 'message': 'Intervention deleted successfully',
