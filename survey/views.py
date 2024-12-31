@@ -15,28 +15,25 @@ class InterventionAPIView(APIView):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['price', 'costs']
     ordering_fields = ['who', 'price', 'costs', 'created_at', 'updated_at']
-    filterset_fields = ['who', '  intervention_type','price', 'costs', 'id']
+    filterset_fields = ['who', 'intervention_type','price', 'costs', 'id']
     pagination_class = Pagination
 
     def get(self, request, pk=None):
         try:
             if pk:
-                # Retrieve single intervention
                 intervention = Intervention.objects.get(id=pk)
                 serializer = InterventionSerializer(intervention, context={'request': request})
                 return Response({
                     'status': 'success',
                     'message': 'Intervention retrieved successfully',
                     'data': serializer.data
-                }, status=status.HTTP_200_OK)
+                }, status=status.HTTP_200_OK)   
             
-            # Retrieve all interventions
             interventions = Intervention.objects.all()
             interventions = DjangoFilterBackend().filter_queryset(request, interventions, self)
             interventions = SearchFilter().filter_queryset(request, interventions, self)
             interventions = OrderingFilter().filter_queryset(request, interventions, self)
 
-            # Paginate results
             paginator = self.pagination_class()
             paginated_interventions = paginator.paginate_queryset(interventions, request)
             serializer = InterventionSerializer(paginated_interventions, many=True, context={'request': request})
