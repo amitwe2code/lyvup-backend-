@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'account',
     'django_filters',
     'useraccount',
+    'survey',
+
 ]
 
 MIDDLEWARE = [
