@@ -55,7 +55,6 @@ class UserAPIView(APIView):
                 users = DjangoFilterBackend().filter_queryset(request, users, self)
                 users = SearchFilter().filter_queryset(request, users, self)
                 users = OrderingFilter().filter_queryset(request, users, self)
-                # pagination का सही implementation
                 paginator = self.pagination_class()
                 paginated_users = paginator.paginate_queryset(users, request)
                 
@@ -69,7 +68,7 @@ class UserAPIView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print('server error:', str(e))  # एरर को प्रिंट करें
+            print('server error:', str(e))
             return Response({
                 'status': 'error',
                 'message': 'there is some server error',
@@ -182,13 +181,16 @@ class UserAPIView(APIView):
         print('pk=',pk)
         try:
             user = UserModel.objects.get(pk=pk)
-            
+             
+            user.is_deleted = 1
+            # intervention.is_active = 0  
+            user.save()
             # Delete profile picture if exists
             if user.profile_picture:
                 if os.path.isfile(user.profile_picture.path):
                     os.remove(user.profile_picture.path)
             
-            user.delete()
+            # user.delete()
             return Response({
                 'status': 'success',
                 'message': 'User deleted successfully',

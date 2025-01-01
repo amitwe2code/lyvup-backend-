@@ -21,6 +21,10 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', views.ResetPasswordView.as_view(), name='reset_password'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('useraccount/',include('useraccount.urls')),
+    path('survey/',include('survey.urls')),
+    path('activityapp/',include('activityapp.urls')),
+
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

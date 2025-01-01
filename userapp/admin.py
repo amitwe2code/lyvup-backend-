@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Useradmin(UserAdmin):
     list_display = ('id', 'name', 'email', 'user_type', 'status', 'is_active', 'created_at', 'updated_at')
     
-    # फ़ील्ड्स को ग्रुप में व्यवस्थित करें
+    # arrange fields group wise.
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('name', 'phone', 'profile_picture')}),

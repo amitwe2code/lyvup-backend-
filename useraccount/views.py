@@ -116,7 +116,10 @@ class UserAccountCreateView(APIView):
 class UserAccountDeleteView(APIView):
     def delete(self,request,pk):
         user_account=UserAccountModel.objects.get(id=pk)
-        user_account.delete()
+        # user_account.delete()
+        user_account.is_deleted = 1
+            # intervention.is_active = 0  
+        user_account.save()
         return Response({
             "message":"User account deleted successfully",
             "status":"success"
