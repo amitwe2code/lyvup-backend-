@@ -5,8 +5,7 @@ class LoginSerializer(serializers.Serializer):
     email=serializers.EmailField()
     password=serializers.CharField()
 
-
-
+   
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 

@@ -9,10 +9,20 @@ class AccountModel(models.Model):
     account_name = models.CharField(max_length=255)
     team_leader_id = models.IntegerField()
     language = models.CharField(max_length=50, default='en')
-    is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
+    is_active = models.IntegerField(default=1)
+    is_deleted = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+       
+        if self.is_deleted:
+            self.is_active = 0  
+        else:
+            self.is_active = 1  
+
+        super(AccountModel, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.account_name}"

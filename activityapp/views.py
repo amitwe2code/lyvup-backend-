@@ -123,7 +123,9 @@ class ActivityActionTypeAPIView(APIView):
     def delete(self, request, pk):
         try:
             activity_action_type = ActivityActionType.objects.get(id=pk)
-            activity_action_type.is_deleted = True
+            # activity_action_type.is_deleted = True
+            activity_action_type.is_deleted = 1 
+
             activity_action_type.save()
             return Response({
                 'status': 'success',

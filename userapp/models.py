@@ -104,11 +104,19 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     is_team_leader = models.BooleanField(default=False)
     wly_token = models.BooleanField(default=False)
     is_used_token = models.BooleanField(default=False)
-    is_deleted = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_deleted = models.IntegerField(default=0)
+    is_active = models.IntegerField(default=1)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def save(self, *args, **kwargs):
+       
+        if self.is_deleted:
+            self.is_active = 0  
+        else:
+            self.is_active = 1  
+
+        super(UserModel, self).save(*args, **kwargs)
 
     objects = UserManager()
 

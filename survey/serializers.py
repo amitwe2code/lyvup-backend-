@@ -17,13 +17,13 @@ class InterventionSerializer(serializers.ModelSerializer):
             'coach_type', 'url', 'amount', 'file', 'upload_possible',
             'intervention_description', 'intervention_name', 'show_in_tasks']
     def validate_is_active(self, value):
-        # Ensure value is either 1 (active) or 0 (inactive)
+        # value is either 1 (active) or 0 (inactive)
         if value not in [0, 1]:
             raise serializers.ValidationError("is_active must be 0 or 1")
         return value
 
     def validate_is_deleted(self, value):
-        # Ensure value is either 0 (not deleted) or 1 (deleted)
+        # value is either 0 (not deleted) or 1 (deleted)
         if value not in [0, 1]:
             raise serializers.ValidationError("is_deleted must be 0 or 1")
         return value
