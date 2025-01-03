@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django_filters',
     'useraccount',
     'survey',
+    'activityapp',
+    'programs',
+    'program',
 
 ]
 
@@ -82,22 +85,22 @@ FRONTEND_URL = 'http://localhost:5173/reset/'
 
 # Database
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'lyvup_db',        
-    #     'USER': 'postgres',     
-    #     'PASSWORD': 'sumit007', 
-    #     'HOST': 'localhost',          
-    #     'PORT': '5432',        
-    # }
-      'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'lyvup_db'),
-        'USER': os.environ.get('DB_USER', 'amit'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'we2code'),
-        'HOST': os.environ.get('DB_HOST', 'postgres_db'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': 'lyvup_db',        
+        'USER': 'postgres',     
+        'PASSWORD': 'we2code', 
+        'HOST': 'localhost',          
+        'PORT': '5432',        
     }
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('DB_NAME', 'lyvup_db'),
+    #     'USER': os.environ.get('DB_USER', 'amit'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'we2code'),
+    #     'HOST': os.environ.get('DB_HOST', 'postgres_db'),
+    #     'PORT': os.environ.get('DB_PORT', '5432'),
+    # }
 }
 
 
@@ -162,6 +165,8 @@ REST_FRAMEWORK = {
 }
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:5173",  
+    # "http://127.0.0.1:5173",  
     "http://localhost:5173",  
     "http://127.0.0.1:5050", 
     "http://128.199.55.101:",

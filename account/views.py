@@ -66,7 +66,10 @@ class AccountAPIView(APIView):
     def delete(self, request, pk):
         try:
             account = AccountModel.objects.get(pk=pk)
-            account.delete()
+            account.is_deleted = 1
+            account.save()
+
+            # account.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except AccountModel.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)

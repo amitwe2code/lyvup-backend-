@@ -9,34 +9,35 @@ from .models import Intervention
 from .serializers import InterventionSerializer
 from lyvupapp.pagination import Pagination
 
+
 class InterventionAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ['price', 'costs']
-    ordering_fields = ['who', 'price', 'costs', 'created_at', 'updated_at']
-    filterset_fields = ['who', '  intervention_type','price', 'costs', 'id']
+    search_fields = [ 'id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check', 'send_reminder']
+    ordering_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check', 'send_reminder',]
+    filterset_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
+        'activity_type', 'completion_check']
     pagination_class = Pagination
 
     def get(self, request, pk=None):
         try:
             if pk:
-                # Retrieve single intervention
                 intervention = Intervention.objects.get(id=pk)
                 serializer = InterventionSerializer(intervention, context={'request': request})
                 return Response({
                     'status': 'success',
                     'message': 'Intervention retrieved successfully',
                     'data': serializer.data
-                }, status=status.HTTP_200_OK)
+                }, status=status.HTTP_200_OK)   
             
-            # Retrieve all interventions
             interventions = Intervention.objects.all()
             interventions = DjangoFilterBackend().filter_queryset(request, interventions, self)
             interventions = SearchFilter().filter_queryset(request, interventions, self)
             interventions = OrderingFilter().filter_queryset(request, interventions, self)
 
-            # Paginate results
             paginator = self.pagination_class()
             paginated_interventions = paginator.paginate_queryset(interventions, request)
             serializer = InterventionSerializer(paginated_interventions, many=True, context={'request': request})
@@ -59,6 +60,9 @@ class InterventionAPIView(APIView):
     def post(self, request):
         try:
             data = request.data
+            # data['is_active'] = True
+            # data['is_deleted'] = False
+            print('request data ',data)
             serializer = InterventionSerializer(data=data, context={'request': request})
 
             if serializer.is_valid():
@@ -68,7 +72,7 @@ class InterventionAPIView(APIView):
                     'message': 'Intervention created successfully',
                     'data': serializer.data
                 }, status=status.HTTP_201_CREATED)
-
+            print("serializer",serializer)
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -88,13 +92,14 @@ class InterventionAPIView(APIView):
 
     def patch(self, request, pk):
         return self._update_intervention(request, pk, partial=True)
-
     def _update_intervention(self, request, pk, partial=False):
         try:
             intervention = Intervention.objects.get(id=pk)
             serializer = InterventionSerializer(intervention, data=request.data, partial=partial, context={'request': request})
 
             if serializer.is_valid():
+                # Set the updated_by field to the current user
+                intervention.updated_by = request.user
                 intervention = serializer.save()
                 return Response({
                     'status': 'success',
@@ -124,7 +129,12 @@ class InterventionAPIView(APIView):
 
     def delete(self, request, pk):
         try:
+            print("pk=>",pk)
             intervention = Intervention.objects.get(id=pk)
+            # intervention.delete()
+            
+            # intervention.is_deleted = 1
+            # intervention.is_active = 0  
             intervention.delete()
             return Response({
                 'status': 'success',
