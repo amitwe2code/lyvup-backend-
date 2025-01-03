@@ -119,7 +119,7 @@ class UserAccountDeleteView(APIView):
         # user_account.delete()
         user_account.is_deleted = 1
             # intervention.is_active = 0  
-        user_account.save()
+        user_account.delete()
         return Response({
             "message":"User account deleted successfully",
             "status":"success"

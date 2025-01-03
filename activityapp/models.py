@@ -1,6 +1,7 @@
 from django.db import models
 
 class ActivityActionType(models.Model):
+    id=models.AutoField(primary_key=True)
     activity_type = models.CharField(max_length=255,null=True, blank=True)
     activity = models.CharField(max_length=255,null=True, blank=True)
     amount = models.IntegerField(null=True, blank=True)

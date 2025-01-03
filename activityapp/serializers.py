@@ -12,7 +12,7 @@ class ActivityActionTypeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("is_active must be 0 or 1")
         return value
 
-    def validate_is_deleted(self, value):
-        if value not in [0, 1]:
-            raise serializers.ValidationError("is_deleted must be 0 or 1")
-        return value
+    # def validate_is_deleted(self, value):
+    #     if value not in [0, 1]:
+    #         raise serializers.ValidationError("is_deleted must be 0 or 1")
+    #     return value

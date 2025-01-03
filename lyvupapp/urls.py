@@ -23,6 +23,7 @@ urlpatterns = [
     path('useraccount/',include('useraccount.urls')),
     path('survey/',include('survey.urls')),
     path('activityapp/',include('activityapp.urls')),
+    # path('program/',include('programs.urls')),
 
 
 ]

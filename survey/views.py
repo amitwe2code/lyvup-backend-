@@ -15,23 +15,11 @@ class InterventionAPIView(APIView):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = [ 'id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
-        'show_completed', 'location', 'user_duration', 'duration_coach', 
-        'coach_type', 'url', 'amount', 'file', 'upload_possible', 
-        'intervention_description', 'intervention_name', 'show_in_tasks', 
-        'is_active', 'is_deleted', 'created_at', 'updated_at']
+        'activity_type', 'completion_check', 'send_reminder']
     ordering_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
-        'show_completed', 'location', 'user_duration', 'duration_coach', 
-        'coach_type', 'url', 'amount', 'file', 'upload_possible', 
-        'intervention_description', 'intervention_name', 'show_in_tasks', 
-        'is_active', 'is_deleted', 'created_at', 'updated_at']
+        'activity_type', 'completion_check', 'send_reminder',]
     filterset_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 
-        'show_completed', 'location', 'user_duration', 'duration_coach', 
-        'coach_type',  'amount', 
-        'intervention_description', 'intervention_name', 'show_in_tasks', 
-        'is_active', 'is_deleted', 'created_at', 'updated_at']
+        'activity_type', 'completion_check']
     pagination_class = Pagination
 
     def get(self, request, pk=None):
@@ -74,6 +62,7 @@ class InterventionAPIView(APIView):
             data = request.data
             # data['is_active'] = True
             # data['is_deleted'] = False
+            print('request data ',data)
             serializer = InterventionSerializer(data=data, context={'request': request})
 
             if serializer.is_valid():
@@ -83,7 +72,7 @@ class InterventionAPIView(APIView):
                     'message': 'Intervention created successfully',
                     'data': serializer.data
                 }, status=status.HTTP_201_CREATED)
-
+            print("serializer",serializer)
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -143,9 +132,9 @@ class InterventionAPIView(APIView):
             intervention = Intervention.objects.get(id=pk)
             # intervention.delete()
             
-            intervention.is_deleted = 1
+            # intervention.is_deleted = 1
             # intervention.is_active = 0  
-            intervention.save()
+            intervention.delete()
             return Response({
                 'status': 'success',
                 'message': 'Intervention deleted successfully',

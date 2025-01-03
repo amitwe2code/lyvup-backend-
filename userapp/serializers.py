@@ -34,8 +34,8 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("is_deleted must be 0 or 1")
         return value
     def update(self, instance, validated_data):
-        if 'password' in validated_data:
-            validated_data['password'] = make_password(validated_data['password'])
+        # if 'password' in validated_data:
+        #     validated_data['password'] = make_password(validated_data['password'])
         
         if 'language' in validated_data:
             validated_data['language_preference'] = validated_data.pop('language')
