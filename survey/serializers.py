@@ -8,36 +8,55 @@ class InterventionSerializer(serializers.ModelSerializer):
     # updated_by = serializers.ReadOnlyField(source='updated_by.username')  # Read-only field
     # created_at = serializers.ReadOnlyField()  # Ensure it's read-only
     # updated_at = serializers.ReadOnlyField()
+
     class Meta:
         model = Intervention
         fields = [
-            'id','intervention_type','language', 'activity', 'brand', 'who',
-            'activity_type', 'completion_check', 'send_reminder', 'add_comment_option', 'show_completed',
-            'location', 'user_duration', 'duration_coach',
+            'id','intervention_description', 'intervention_name','intervention_type','language','brand', 'completion_check','activity','who',
+            'activity_type','travel_time','send_reminder', 'add_comment_option', 'show_completed',
+            'location', 'user_duration', 'coach_duration','teamlead_duration',
             'coach_type', 'url', 'amount', 'file', 'upload_possible',
-            'intervention_description', 'intervention_name', 'show_in_tasks']
+             'show_in_task']
+        
+
+    def to_internal_value(self, data):
+        for field_name, value in data.items():
+            if value == "":
+                field = self.fields.get(field_name)
+                if field:
+                    if isinstance(field, serializers.IntegerField):
+                        data[field_name] = 0 
+                    elif isinstance(field, serializers.BooleanField):
+                        data[field_name] = False  
+
+        return super().to_internal_value(data)
+
+    # Individual field validators भी use कर सकते हैं
+    def validate_user_duration(self, value):
+        if value == "":
+            return 0
+        return value
+
+    def validate_coach_duration(self, value):
+        if value == "":
+            return 0
+        return value
+
+    def validate_teamlead_duration(self, value):
+        if value == "":
+            return 0
+        return value
+
+ 
+        
     def validate_is_active(self, value):
-        # value is either 1 (active) or 0 (inactive)
         if value not in [0, 1]:
             raise serializers.ValidationError("is_active must be 0 or 1")
         return value
 
     def validate_is_deleted(self, value):
-        # value is either 0 (not deleted) or 1 (deleted)
+       
         if value not in [0, 1]:
             raise serializers.ValidationError("is_deleted must be 0 or 1")
         return value
-     # todo = serializers.BooleanField()
-
-
-
-# class LanguageSerializer(serializers.ModelSerializer):
-#     class Meta:   
-#         model = Language
-#         fields = ['id', 'code', 'name']
-
-
-# class InterventionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Intervention
-#         fields = ['id', 'intervention_type', 'language', 'name', 'label', 'description']
+   

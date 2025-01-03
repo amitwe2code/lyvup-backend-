@@ -16,7 +16,6 @@ import os
 class UserAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
     search_fields = ['name', 'email', 'phone','id']
     ordering_fields = ['name', 'email','id','phone','user_type','created_at','updated_at']
     filterset_fields = ['user_type','name'] 
@@ -131,21 +130,21 @@ class UserAPIView(APIView):
             user = UserModel.objects.get(pk=pk)
             print('user=>',user)
             # Handle profile picture update
-            profile_picture = request.FILES.get('profile_picture')
-            if profile_picture:
-                # Delete old profile picture
-                if user.profile_picture:
-                    if os.path.isfile(user.profile_picture.path):
-                        os.remove(user.profile_picture.path)
+            # profile_picture = request.FILES.get('profile_picture')
+            # if profile_picture:
+            #     # Delete old profile picture
+            #     if user.profile_picture:
+            #         if os.path.isfile(user.profile_picture.path):
+            #             os.remove(user.profile_picture.path)
                 
-                # Validate new profile picture
-                validation_result = self.validate_image(profile_picture)
-                if not validation_result['is_valid']:
-                    return Response({
-                        'status': 'error',
-                        'message': validation_result['message'],
-                        'data': None
-                    }, status=status.HTTP_400_BAD_REQUEST)
+            #     # Validate new profile picture
+            #     validation_result = self.validate_image(profile_picture)
+            #     if not validation_result['is_valid']:
+            #         return Response({
+            #             'status': 'error',
+            #             'message': validation_result['message'],
+            #             'data': None
+            #         }, status=status.HTTP_400_BAD_REQUEST)
 
             serializer = UserSerializer(user, data=request.data, partial=partial, context={'request': request})
             print('serialize',serializer)
@@ -184,7 +183,7 @@ class UserAPIView(APIView):
              
             user.is_deleted = 1
             # intervention.is_active = 0  
-            user.save()
+            user.delete()
             # Delete profile picture if exists
             if user.profile_picture:
                 if os.path.isfile(user.profile_picture.path):

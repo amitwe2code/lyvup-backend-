@@ -126,7 +126,7 @@ class ActivityActionTypeAPIView(APIView):
             # activity_action_type.is_deleted = True
             activity_action_type.is_deleted = 1 
 
-            activity_action_type.save()
+            activity_action_type.delete()
             return Response({
                 'status': 'success',
                 'message': 'Activity Action Type deleted successfully',

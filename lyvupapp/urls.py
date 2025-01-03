@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from .views import LogoutView,SignupView
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('userapp.urls')),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('useraccount/',include('useraccount.urls')),
     path('survey/',include('survey.urls')),
     path('activityapp/',include('activityapp.urls')),
+    # path('program/',include('programs.urls')),
 
 
 ]
