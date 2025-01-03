@@ -94,10 +94,10 @@ DATABASES = {
     }
     #   'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.environ.get('DB_NAME', 'postgres'),
-    #     'USER': os.environ.get('DB_USER', 'postgres'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres123'),
-    #     'HOST': os.environ.get('DB_HOST', 'postgres-service'),
+    #     'NAME': os.environ.get('DB_NAME', 'lyvup_db'),
+    #     'USER': os.environ.get('DB_USER', 'amit'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'we2code'),
+    #     'HOST': os.environ.get('DB_HOST', 'postgres_db'),
     #     'PORT': os.environ.get('DB_PORT', '5432'),
     # }
 }
