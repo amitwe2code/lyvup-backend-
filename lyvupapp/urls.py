@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from .views import LogoutView,SignupView
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('userapp.urls')),

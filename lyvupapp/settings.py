@@ -46,7 +46,11 @@ INSTALLED_APPS = [
     'useraccount',
     'survey',
     'activityapp',
+<<<<<<< HEAD
     'programs',
+=======
+    'program',
+>>>>>>> origin/backendupdates
 
 ]
 
@@ -86,9 +90,15 @@ FRONTEND_URL = 'http://localhost:5173/reset/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+<<<<<<< HEAD
          'NAME': 'lyvup_db',         
         'USER': 'postgres',     
         'PASSWORD': 'sumit007', 
+=======
+         'NAME': 'new_lyvupdb',         
+        'USER': 'postgres',     
+        'PASSWORD': 'we2code', 
+>>>>>>> origin/backendupdates
         'HOST': 'localhost',          
         'PORT': '5432',        
     }
