@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'useraccount',
     'survey',
     'activityapp',
-    'programs',
+    'program',
 
 ]
 
