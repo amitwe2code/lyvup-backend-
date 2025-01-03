@@ -129,6 +129,7 @@ class InterventionAPIView(APIView):
 
     def delete(self, request, pk):
         try:
+            print("pk=>",pk)
             intervention = Intervention.objects.get(id=pk)
             # intervention.delete()
             
