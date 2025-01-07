@@ -24,7 +24,7 @@ urlpatterns = [
     path('useraccount/',include('useraccount.urls')),
     path('survey/',include('survey.urls')),
     path('activityapp/',include('activityapp.urls')),
-    # path('program/',include('programs.urls')),
+    path('program/',include('program.urls')),
 
 
 ]

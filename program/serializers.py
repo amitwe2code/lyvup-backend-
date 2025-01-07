@@ -14,3 +14,14 @@ class ProgramSerializer(serializers.ModelSerializer):
         if value not in [0, 1]:
             raise serializers.ValidationError("is_deleted must be 0 or 1")
         return value
+
+
+class CreateProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = '__all__'
+
+class GetProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = ['id', 'name', 'description', 'written_by', 'version','price']
