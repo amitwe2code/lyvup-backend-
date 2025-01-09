@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProgramAPIView, AddProgramView
+from .views import  AddProgramView
 
 urlpatterns = [
     # path('', ProgramAPIView.as_view(), name='program-list-create'),

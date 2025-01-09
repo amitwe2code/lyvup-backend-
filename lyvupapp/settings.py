@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'account',
     'django_filters',
     'useraccount',
-    'survey',
+    'activity',
     'activityapp',
     'program',
+    'week'
 
 ]
 
@@ -86,9 +87,9 @@ FRONTEND_URL = 'http://localhost:5173/reset/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'lyvup',
+         'NAME': 'lyvup_db',
         'USER': 'postgres',     
-        'PASSWORD': 'password',
+        'PASSWORD': 'we2code',
         'HOST': 'localhost',          
         'PORT': '5432',        
     }

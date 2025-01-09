@@ -1,19 +1,17 @@
-from rest_framework import serializers
-from .models import Intervention
 
 from rest_framework import serializers
-from .models import Intervention
+from .models import Activity
 
-class InterventionSerializer(serializers.ModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
     # updated_by = serializers.ReadOnlyField(source='updated_by.username')  # Read-only field
     # created_at = serializers.ReadOnlyField()  # Ensure it's read-only
     # updated_at = serializers.ReadOnlyField()
 
     class Meta:
-        model = Intervention
+        model = Activity
         fields = [
-            'id','intervention_description', 'intervention_name','intervention_type','language','brand', 'completion_check','activity','who',
-            'activity_type','travel_time','send_reminder', 'add_comment_option', 'show_completed',
+            'id','activity_description', 'activity_name','activity_type','language','brand', 'completion_check','activity','who',
+            'travel_time','send_reminder', 'add_comment_option', 'show_completed',
             'location', 'user_duration', 'coach_duration','teamlead_duration',
             'coach_type', 'url', 'amount', 'file', 'upload_possible',
              'show_in_task']
@@ -31,7 +29,7 @@ class InterventionSerializer(serializers.ModelSerializer):
 
         return super().to_internal_value(data)
 
-    # Individual field validators भी use कर सकते हैं
+    
     def validate_user_duration(self, value):
         if value == "":
             return 0
