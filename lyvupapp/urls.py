@@ -25,7 +25,7 @@ urlpatterns = [
     path('activity/',include('activity.urls')),
     path('activityapp/',include('activityapp.urls')),
     path('program/',include('program.urls')),
-    path('week/',include('week.urls'),name='week')
+    path('week/',include('programactivity.urls'),name='week')
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

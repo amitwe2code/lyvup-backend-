@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Program
+from programactivity.models import ProgramActivityModel
 from .serializers import ProgramSerializer, CreateProgramSerializer, GetProgramSerializer
 from lyvupapp.pagination import Pagination  # Custom pagination
 
@@ -31,6 +32,13 @@ class AddProgramView(APIView):
                     version=serial_data.get("version"),
                     price=serial_data.get("price")
                 )
+                if(program):
+                    response= ProgramActivityModel.objects.create(
+                    week_no=1,
+                    program_id=program)
+                    print('response in programactivity create in program',response)
+                   
+            
                 return Response({
                     'status': 'success',
                     'message': 'Program created successfully',

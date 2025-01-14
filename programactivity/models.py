@@ -1,7 +1,7 @@
 from django.db import models
 from program.models import Program
 # Create your models here.
-class WeekModel(models.Model):
+class ProgramActivityModel(models.Model):
     ACTIVITY_TYPES = [
         ('survey', 'survey'),
         ('challenge', 'challenge'),
@@ -27,7 +27,6 @@ class WeekModel(models.Model):
     activity = models.CharField(max_length=255,null=True, blank=True)
     brand = models.CharField(max_length=255, null=True, blank=True)
     who = models.TextField(max_length=255, null=True, blank=True)
-    activity_type = models.CharField(null=True, blank=True)
     completion_check = models.CharField(null=True, blank=True)
     show_completed = models.BooleanField(default=False, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
@@ -46,14 +45,15 @@ class WeekModel(models.Model):
     show_in_task = models.CharField(default='no',blank=True)
     add_comment_option = models.CharField(default='no',blank=True)
     indicate_when_completed = models.CharField(default='no',blank=True ,null=True)
-
+    day=models.CharField(blank=True,null=True)
+    time=models.TimeField(default=0,blank=True ,null=True)
     is_active = models.IntegerField(default=1)  
     is_deleted = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
    
     class Meta:
-        db_table = 'week_table'
+        db_table = 'program_activity_table'
    
     def save(self, *args, **kwargs):
         if self.activity == "":
@@ -72,8 +72,10 @@ class WeekModel(models.Model):
             self.coach_type = None
         if self.url == "":
             self.url = None
-        if self.user_duration:
+        if self.user_duration=='':
             self.user_duration=0
+        if self.time=='':
+            self.time=None     
         if self.coach_duration:
             self.coach_duration=0
         if self.teamlead_duration:
@@ -90,7 +92,33 @@ class WeekModel(models.Model):
         else:
             self.is_active = 1  # Set is_active to 1 if not deleted
 
-        super(WeekModel, self).save(*args, **kwargs)
+        super(ProgramActivityModel, self).save(*args, **kwargs)
+
+    def update_from_activity(self, activity):
+        """Update fields from the given Activity instance."""
+        self.activity_type = activity.activity_type
+        self.language = activity.language
+        self.activity = activity.activity
+        self.brand = activity.brand
+        self.who = activity.who
+        self.completion_check = activity.completion_check
+        self.show_completed=activity.show_completed
+        self.location = activity.location
+        self.user_duration = activity.user_duration
+        self.teamlead_duration = activity.teamlead_duration
+        self.coach_duration = activity.coach_duration
+        self.coach_type = activity.coach_type
+        self.travel_time = activity.travel_time
+        self.url = activity.url
+        self.amount = activity.amount
+        self.file = activity.file
+        self.upload_possible = activity.upload_possible
+        self.activity_description = activity.activity_description
+        self.activity_name = activity.activity_name
+        self.send_reminder = activity.send_reminder
+        self.show_in_task = activity.show_in_task
+        self.add_comment_option = activity.add_comment_option
+        self.indicate_when_completed = activity.indicate_when_completed# Assuming you want to copy the time as well
 
     
    

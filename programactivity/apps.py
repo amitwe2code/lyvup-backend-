@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class WeekConfig(AppConfig):
+class ProgramActivityConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'week'
+    name = 'programactivity'

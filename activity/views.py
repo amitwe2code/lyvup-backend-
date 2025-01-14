@@ -43,7 +43,7 @@ class ActivityView(APIView):
             serializer = ActivitySerializer(paginated_activitys, many=True, context={'request': request})
             return paginator.get_paginated_response(serializer.data)
 
-        except activity.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'activity not found',
@@ -113,7 +113,7 @@ class ActivityView(APIView):
                 'data': serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        except activity.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'activity not found',
@@ -142,7 +142,7 @@ class ActivityView(APIView):
                 # 'data': None
             }, status=status.HTTP_204_NO_CONTENT)
 
-        except activity.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'activity not found',
