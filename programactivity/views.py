@@ -73,7 +73,15 @@ class ProgramActivityView(APIView):
                         'data': None
                     }, status=status.HTTP_404_NOT_FOUND)
             else:
-                print('yha aaana he ')    
+                print('yha aaana he ')
+                programActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no__gte=week_no)
+                if programActivitys.count()>=1 :
+                     print('mid week me aaya he ')
+                     for activity in programActivitys :
+                          print(' update week in mid week add')
+                          activity.week_no=activity.week_no+1
+                          activity.save()
+                  # // __gte greate than equal to  
                 serializer=ProgramActivitySerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
@@ -175,61 +183,76 @@ class ProgramActivityView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except ProgramActivityModel.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    def delete(self,request,pk):
+class ActivityDelete(APIView):
+    def post(self,request):
         try:
-            # Retrieve the activity to be deleted
-
+            # Retrieve the activity to be delete
+            # print('pk =',pk)
             print('request come ')
             data=request.data
             activity_id=data.get('activity_id')
             program_id=data.get('program_id')
             week_no=data.get('week_no')
+            program=Program.objects.get(id=program_id)
             print('request data =>',data)
             if activity_id is None or activity_id =='':
                 print('all delete ')
-                getAllWeekActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
-                print('geta ll data ===',getAllWeekActivitys)
-                getAllWeekActivitys.delete()
-                if(week_no==1):
-                   response= ProgramActivityModel.objects.create(week_no=week_no,program_id=program_id)
+                getWeekActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
+                print('get all data ===',getWeekActivitys)
+                getAllprogramActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no__gte=week_no)
+                getWeekActivitys.delete()
+                if getAllprogramActivitys.count()>1:
+                    print('update next week activitys',getAllprogramActivitys.count())
+                    for activity in getAllprogramActivitys :
+                        activity.week_no=activity.week_no-1
+                        activity.save()
+                elif (int(week_no)==1):
+                    print('create first empty week ')
+                    response= ProgramActivityModel.objects.create(week_no=week_no,program_id=program)
                 return Response({
-                       'status':'200 ok ',
-                       'message':'week delete successfully'
+                    'status':'200 ok ',
+                    'message':'activity week delete successfully'
                    },status=status.HTTP_200_OK)   
-            if week_no == 1 :
-                print('week on 1 delete ')
-                getAllWeekActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
-                activity = ProgramActivityModel.objects.get(pk=activity_id)
-                activity.delete()
-                if getAllWeekActivitys.count()==1:
-                    response= ProgramActivityModel.objects.create(week_no=week_no,program_id=program_id)
-                return Response({
-                       'status':'200 ok ',
-                       'message':'activity delete successfully'
-                   },status=status.HTTP_200_OK)   
+            getWeekActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
+            print('total activity in that week =>',getWeekActivitys.count())
+            print('total activity in that week =>',getWeekActivitys.count()==1)
             activity = ProgramActivityModel.objects.get(pk=activity_id)
+            print('delete activity in out side all ')
+            if getWeekActivitys.count()==1:
+                print('create empty if it will last activity in week')
+                activity.delete()
+                response= ProgramActivityModel.objects.create(week_no=week_no,program_id=program)
+                return Response({
+                    'status':'200 ok ',
+                    'message':'activity delete successfully'
+                },status=status.HTTP_200_OK)
             activity.delete()
-            print('any delte ')
             return Response({
-                'status': 'success',
-                'message': 'Activity deleted successfully',
-            }, status=status.HTTP_204_NO_CONTENT)
-
+                    'status':'200 ok ',
+                    'message':'activity delete successfully'
+                },status=status.HTTP_200_OK)
+                   
+            
+        except Program.DoesNotExist:
+                        return Response({
+                            'status': 'error',
+                            'message': 'program not found',
+                            'data': None
+                        }, status=status.HTTP_404_NOT_FOUND)        
+            
         except ProgramActivityModel.DoesNotExist:
-            return Response({
-                'status': 'error',
-                'message': 'Activity not found',
-                'data': None
-            }, status=status.HTTP_404_NOT_FOUND)
+                        return Response({
+                            'status': 'error',
+                            'message': 'Activity not found',
+                            'data': None
+                        }, status=status.HTTP_404_NOT_FOUND)        
         except Exception as e:
-            print(f'Server error: {str(e)}')
-            return Response({
-                'status': 'error',
-                'message': 'There is some server error',
-                'data': None
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-           
+                    print(f'Server error: {str(e)}')
+                    return Response({
+                        'status': 'error',
+                        'message': 'There is some server error',
+                        'data': None
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)           
 
-
-# Create your views here.
+                
+             

@@ -1,5 +1,6 @@
 from django.db import models
 from program.models import Program
+import datetime
 # Create your models here.
 class ProgramActivityModel(models.Model):
     ACTIVITY_TYPES = [
@@ -46,7 +47,7 @@ class ProgramActivityModel(models.Model):
     add_comment_option = models.CharField(default='no',blank=True)
     indicate_when_completed = models.CharField(default='no',blank=True ,null=True)
     day=models.CharField(blank=True,null=True)
-    # time=models.IntegerField(blank=True ,null=True)
+    time=models.CharField(default='0',blank=True ,null=True)
     is_active = models.IntegerField(default=1)  
     is_deleted = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -74,8 +75,8 @@ class ProgramActivityModel(models.Model):
             self.url = None
         if self.user_duration=='':
             self.user_duration=0
-        # if self.time=='':
-            # self.time=0     
+        if self.time=='':
+            self.time=0       
         if self.coach_duration:
             self.coach_duration=0
         if self.teamlead_duration:
