@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'account',
     'django_filters',
     'useraccount',
-    'survey',
+    'activity',
     'activityapp',
     'program',
+    'programactivity'
 
 ]
 

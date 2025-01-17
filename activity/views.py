@@ -5,48 +5,48 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import Intervention
-from .serializers import InterventionSerializer
+from .models import Activity
+from .serializers import ActivitySerializer
 from lyvupapp.pagination import Pagination
 
 
-class InterventionAPIView(APIView):
+class ActivityView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = [ 'id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check', 'send_reminder']
-    ordering_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check', 'send_reminder',]
-    filterset_fields = ['id', 'intervention_type', 'language', 'activity', 'brand', 'who', 
-        'activity_type', 'completion_check']
+    search_fields = [ 'id', 'activity_type', 'language', 'activity', 'brand', 'who', 
+         'completion_check', 'send_reminder']
+    ordering_fields = ['id', 'activity_type', 'language', 'activity', 'brand', 'who', 
+         'completion_check', 'send_reminder',]
+    filterset_fields = ['id', 'activity_type', 'language', 'activity', 'brand', 'who', 
+        'completion_check']
     pagination_class = Pagination
 
     def get(self, request, pk=None):
         try:
             if pk:
-                intervention = Intervention.objects.get(id=pk)
-                serializer = InterventionSerializer(intervention, context={'request': request})
+                activity = Activity.objects.get(id=pk)
+                serializer = ActivitySerializer(activity, context={'request': request})
                 return Response({
                     'status': 'success',
-                    'message': 'Intervention retrieved successfully',
+                    'message': 'activity retrieved successfully',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)   
             
-            interventions = Intervention.objects.all()
-            interventions = DjangoFilterBackend().filter_queryset(request, interventions, self)
-            interventions = SearchFilter().filter_queryset(request, interventions, self)
-            interventions = OrderingFilter().filter_queryset(request, interventions, self)
+            activitys = Activity.objects.all()
+            activitys = DjangoFilterBackend().filter_queryset(request, activitys, self)
+            activitys = SearchFilter().filter_queryset(request, activitys, self)
+            activitys = OrderingFilter().filter_queryset(request, activitys, self)
 
             paginator = self.pagination_class()
-            paginated_interventions = paginator.paginate_queryset(interventions, request)
-            serializer = InterventionSerializer(paginated_interventions, many=True, context={'request': request})
+            paginated_activitys = paginator.paginate_queryset(activitys, request)
+            serializer = ActivitySerializer(paginated_activitys, many=True, context={'request': request})
             return paginator.get_paginated_response(serializer.data)
 
-        except Intervention.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'Intervention not found',
+                'message': 'activity not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -63,13 +63,13 @@ class InterventionAPIView(APIView):
             # data['is_active'] = True
             # data['is_deleted'] = False
             print('request data ',data)
-            serializer = InterventionSerializer(data=data, context={'request': request})
+            serializer = ActivitySerializer(data=data, context={'request': request})
 
             if serializer.is_valid():
-                intervention = serializer.save()
+                activity = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'Intervention created successfully',
+                    'message': 'activity created successfully',
                     'data': serializer.data
                 }, status=status.HTTP_201_CREATED)
             print("serializer",serializer)
@@ -88,22 +88,22 @@ class InterventionAPIView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk):
-        return self._update_intervention(request, pk, partial=False)
+        return self._update_activity(request, pk, partial=False)
 
     def patch(self, request, pk):
-        return self._update_intervention(request, pk, partial=True)
-    def _update_intervention(self, request, pk, partial=False):
+        return self._update_activity(request, pk, partial=True)
+    def _update_activity(self, request, pk, partial=False):
         try:
-            intervention = Intervention.objects.get(id=pk)
-            serializer = InterventionSerializer(intervention, data=request.data, partial=partial, context={'request': request})
+            activity = Activity.objects.get(id=pk)
+            serializer = ActivitySerializer(activity, data=request.data, partial=partial, context={'request': request})
 
             if serializer.is_valid():
                 # Set the updated_by field to the current user
-                intervention.updated_by = request.user
-                intervention = serializer.save()
+                activity.updated_by = request.user
+                activity = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'Intervention updated successfully',
+                    'message': 'activity updated successfully',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -113,10 +113,10 @@ class InterventionAPIView(APIView):
                 'data': serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        except Intervention.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'Intervention not found',
+                'message': 'activity not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -130,22 +130,22 @@ class InterventionAPIView(APIView):
     def delete(self, request, pk):
         try:
             print("pk=>",pk)
-            intervention = Intervention.objects.get(id=pk)
-            # intervention.delete()
+            activity = Activity.objects.get(id=pk)
+            # activity.delete()
             
-            # intervention.is_deleted = 1
-            # intervention.is_active = 0  
-            intervention.delete()
+            # activity.is_deleted = 1
+            # activity.is_active = 0  
+            activity.delete()
             return Response({
                 'status': 'success',
-                'message': 'Intervention deleted successfully',
+                'message': 'activity deleted successfully',
                 # 'data': None
             }, status=status.HTTP_204_NO_CONTENT)
 
-        except Intervention.DoesNotExist:
+        except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'Intervention not found',
+                'message': 'activity not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
