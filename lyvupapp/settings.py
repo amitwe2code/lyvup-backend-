@@ -86,11 +86,12 @@ FRONTEND_URL = 'http://localhost:5173/reset/'
 # Database
 DATABASES = {
     # 'default': {
-    #      'NAME': 'lyvup_db',         
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'lyvup_db',
     #     'USER': 'postgres',     
-    #     'PASSWORD': 'we2code', 
+    #     'PASSWORD': 'we2code',
     #     'HOST': 'localhost',          
-    #     'PORT': '5432',        
+    #     'PORT': '5432',       
     # }
       'default': {
         'ENGINE': 'django.db.backends.postgresql',
