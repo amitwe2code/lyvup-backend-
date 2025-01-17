@@ -63,7 +63,7 @@ class ProgramActivityView(APIView):
               
             print('request data =',data)
             if activity_id :
-                print('yha nahi jana tha')
+                print('activity get ')
                 try:
                     activity = Activity.objects.get(id=activity_id)
                 except Activity.DoesNotExist:
@@ -73,7 +73,7 @@ class ProgramActivityView(APIView):
                         'data': None
                     }, status=status.HTTP_404_NOT_FOUND)
             else:
-                print('yha aaana he ')
+                print('week add  ')
                 programActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no__gte=week_no)
                 if programActivitys.count()>=1 :
                      print('mid week me aaya he ')
@@ -90,6 +90,7 @@ class ProgramActivityView(APIView):
                         'message':'activity create successfully '
                     },status=status.HTTP_200_OK)
             data=combinedata(data)
+            print('combine data =>',data)
             print('step 2')
             if program_id:
                 try:

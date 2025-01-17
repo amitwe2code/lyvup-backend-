@@ -19,6 +19,8 @@ def combinedata(data):
     activity_id=data.get('activity_id')
     program_id=data.get('program_id')
     week_no=data.get('week_no')
+    day=data.get('day')
+    time=data.get('time')
     if activity_id is not None:
         activity_id = int(activity_id)
     else:
@@ -39,6 +41,8 @@ def combinedata(data):
             'activity_id':activity_id,
             'program_id':program_id,
             'week_no':week_no,
+            'day':day,
+            'time':time,
             'activity_type':activity.activity_type,
             'language': activity.language,
             'activity': activity.activity,

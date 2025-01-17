@@ -14,7 +14,8 @@ from lyvupapp.pagination import Pagination  # Custom pagination
 class AddProgramView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    search_fields = ['id','name', 'description', 'written_by', 'version', 'price']
+    search_fields = ['name', 'description']
+    # search_fields = ['id','name', 'description', 'written_by', 'version', 'price']
     ordering_fields = ['id', 'name', 'description', 'written_by', 'version', 'price','created_at', 'updated_at']
     filterset_fields = ['id', 'name', 'description', 'written_by', 'version', 'price','created_at', 'updated_at']
     pagination_class = Pagination
