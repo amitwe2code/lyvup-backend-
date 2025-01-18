@@ -1,8 +1,10 @@
 
 from pathlib import Path
 import os
-from datetime import timedelta 
+from datetime import timedelta
+from dotenv import load_dotenv 
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,16 +84,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 FRONTEND_URL = 'http://localhost:5173/reset/' 
-
 # Database
 DATABASES = {
+   
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'lyvup_db',
-        'USER': 'postgres',     
-        'PASSWORD': 'we2code',
-        'HOST': 'localhost',          
-        'PORT': '5432',        
+        'NAME': os.getenv('DATABASE'),
+        'USER': os.getenv('USER'),    
+        'PASSWORD':  os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),          
+        'PORT': os.getenv('PORT'),        
     }
     #   'default': {
     #     'ENGINE': 'django.db.backends.postgresql',

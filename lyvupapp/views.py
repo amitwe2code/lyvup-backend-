@@ -107,8 +107,6 @@ class SignupView(APIView):
             print('data=',request.data)
             serializer = UserSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
-                # Password को hash करें
-                serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
                 
                 profile_picture = request.FILES.get('profile_picture')
                 # if profile_picture:

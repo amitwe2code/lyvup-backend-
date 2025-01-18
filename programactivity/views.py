@@ -24,13 +24,13 @@ class ProgramActivityView(APIView):
     def get(self,request,pk=None):
         try:
             if pk:
-                programactivity=ProgramActivityModel.objects.all(id=pk)
+                programactivity=ProgramActivityModel.objects.get(id=pk)
                 serializer=ProgramActivitySerializer(programactivity,context={'request':request})
                 return Response({
                     'status':'success',
                     'message':'week retrieved successfully',
                     'data':serializer.data
-                },status=status.HTTP_200_Ok)
+                },status=status.HTTP_200_OK)
             programactivitys = ProgramActivityModel.objects.all()
             programactivitys = DjangoFilterBackend().filter_queryset(request, programactivitys, self)
             programactivitys = SearchFilter().filter_queryset(request, programactivitys, self)
