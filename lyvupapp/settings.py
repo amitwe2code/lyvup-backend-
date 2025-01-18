@@ -1,8 +1,10 @@
 
 from pathlib import Path
 import os
-from datetime import timedelta 
+from datetime import timedelta
+from dotenv import load_dotenv 
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,25 +84,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 FRONTEND_URL = 'http://localhost:5173/reset/' 
-
 # Database
 DATABASES = {
-    # 'default': {
-    #    'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'lyvup_db',
-    #     'USER': 'postgres',     
-    #     'PASSWORD': 'we2code',
-    #     'HOST': 'localhost',          
-    #     'PORT': '5432',       
-    # }
-      'default': {
+   
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'postgres'),
-        'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres123'),
-        'HOST': os.environ.get('DB_HOST', 'postgres-service'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': os.getenv('DATABASE'),
+        'USER': os.getenv('USER'),    
+        'PASSWORD':  os.getenv('PASSWORD'),
+        'HOST': os.getenv('HOST'),          
+        'PORT': os.getenv('PORT'),       
     }
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('DB_NAME', 'lyvup_db'),
+    #     'USER': os.environ.get('DB_USER', 'amit'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'we2code'),
+    #     'HOST': os.environ.get('DB_HOST', 'postgres_db'),
+    #     'PORT': os.environ.get('DB_PORT', '5432'),
+    # }
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('DB_NAME', 'postgres'),
+    #     'USER': os.environ.get('DB_USER', 'postgres'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres123'),
+    #     'HOST': os.environ.get('DB_HOST', 'postgres-service'),
+    #     'PORT': os.environ.get('DB_PORT', '5432'),
+    # }
 }
 
 
