@@ -50,21 +50,21 @@ class UserAccountView(APIView):
 class UserAccountCreateView(APIView):
     def post(self, request):
         try:
-            # Multiple users के लिए user_ids list लेंगे
-            user_ids = request.data.get('users', [])  # users की list
+            
+            user_ids = request.data.get('users', [])  
             account_id = request.data.get('account')
             print('user_ids',user_ids)
-            # Basic validation
+           
             if not user_ids or not account_id:
                 return Response({
-                    "message": "Users list और account ID दोनों आवश्यक हैं",
+                    "message": " required Users list and account ID",
                     "status": "400 bad request"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             created_connections = []
             already_connected = []
 
-            # प्रत्येक user के लिए connection बनाएं
+           
             for user_id in user_ids:
                 # Check if connection already exists
                 existing = UserAccountModel.objects.filter(
@@ -116,6 +116,9 @@ class UserAccountCreateView(APIView):
 class UserAccountDeleteView(APIView):
     def delete(self,request,pk):
         user_account=UserAccountModel.objects.get(id=pk)
+        # user_account.delete()
+        user_account.is_deleted = 1
+            # intervention.is_active = 0  
         user_account.delete()
         return Response({
             "message":"User account deleted successfully",

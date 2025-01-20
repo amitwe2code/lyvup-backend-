@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from .views import LogoutView,SignupView
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('userapp.urls')),
@@ -21,6 +22,11 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', views.ResetPasswordView.as_view(), name='reset_password'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('useraccount/',include('useraccount.urls')),
+    path('survey/',include('survey.urls')),
+    path('activityapp/',include('activityapp.urls')),
+    # path('program/',include('programs.urls')),
+
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

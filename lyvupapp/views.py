@@ -107,17 +107,19 @@ class SignupView(APIView):
             print('data=',request.data)
             serializer = UserSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
-                print('request come')
+                # Password को hash करें
+                serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
+                
                 profile_picture = request.FILES.get('profile_picture')
-                if profile_picture:
-                    validation_result = self.validate_image(profile_picture)
-                    if not validation_result['is_valid']:
-                        print('picture validation fail')
-                        return Response({
-                            'status': 'error',
-                            'message': validation_result['message'],
-                            'data': None
-                        }, status=status.HTTP_400_BAD_REQUEST)
+                # if profile_picture:
+                #     validation_result = self.validate_image(profile_picture)
+                #     if not validation_result['is_valid']:
+                #         print('picture validation fail')
+                #         return Response({
+                #             'status': 'error',
+                #             'message': validation_result['message'],
+                #             'data': None
+                #         }, status=status.HTTP_400_BAD_REQUEST)
 
                 user = serializer.save()
                 print('success response')
