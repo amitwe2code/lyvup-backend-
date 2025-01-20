@@ -12,11 +12,6 @@ services:
     #   - DB_HOST=postgres-db
     ports:
       - "8000:8000"
-    networks:
-      - app-network
-    depends_on:
-      db:
-        condition: service_healthy
 
 #   db:
 #     image: postgres:13
