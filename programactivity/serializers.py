@@ -9,11 +9,6 @@ class ProgramActivitySerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
-
-    # def validate_time(self, value):
-    #     if value == "":
-    #         return None
-    #     return value
 def combinedata(data):
   
     activity_id=data.get('activity_id')

@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'activity',
     'activityapp',
     'program',
-    'programactivity'
+    'programactivity',
+    'consent',
+    'gdprRequest'
 
 ]
 
@@ -84,25 +86,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 FRONTEND_URL = 'http://localhost:5173/reset/' 
+print('data-',os.getenv('DATABASE'))
 # Database
 DATABASES = {
    
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE'),
-        'USER': os.getenv('USER'),    
-        'PASSWORD':  os.getenv('PASSWORD'),
-        'HOST': os.getenv('HOST'),          
-        'PORT': os.getenv('PORT'),        
-    }
-    #   'default': {
+    # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.environ.get('DB_NAME', 'lyvup_db'),
-    #     'USER': os.environ.get('DB_USER', 'amit'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'we2code'),
-    #     'HOST': os.environ.get('DB_HOST', 'postgres_db'),
-    #     'PORT': os.environ.get('DB_PORT', '5432'),
+    #     'NAME': os.getenv('DATABASE'),
+    #     'USER': os.getenv('USER'),    
+    #     'PASSWORD':  os.getenv('PASSWORD'),
+    #     'HOST': os.getenv('HOST'),          
+    #     'PORT': os.getenv('PORT'),        
     # }
+  'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+         'NAME': 'lyvup_db',
+        'USER': 'postgres',     
+        'PASSWORD': 'we2code',
+        'HOST': 'localhost',          
+        'PORT': '5432',        
+    }
 }
 
 

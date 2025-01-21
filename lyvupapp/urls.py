@@ -25,6 +25,8 @@ urlpatterns = [
     path('activity/',include('activity.urls')),
     path('activityapp/',include('activityapp.urls')),
     path('program/',include('program.urls')),
+    path('consent/',include('consent.urls')),
+    path('gdpr/',include('gdprRequest.urls')),
     path('week/',include('programactivity.urls'),name='week')
 ]
 
