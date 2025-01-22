@@ -86,7 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 FRONTEND_URL = 'http://localhost:5173/reset/' 
-print('data-',os.getenv('DATABASE'))
+# print('data-',os.getenv('DATABASE'))
 # Database
 DATABASES = {
    
