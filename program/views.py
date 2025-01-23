@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Program
 from programactivity.models import ProgramActivityModel
+from programactivity.models import ProgramActivityModel
 from .serializers import ProgramSerializer, CreateProgramSerializer, GetProgramSerializer
 from lyvupapp.pagination import Pagination  # Custom pagination
 
@@ -24,6 +25,7 @@ class AddProgramView(APIView):
     def post(self, request):
         try:
             serializer = CreateProgramSerializer(data=request.data)
+            print('program post request ')
             if serializer.is_valid(raise_exception=True):
                 serial_data = serializer.validated_data
                 program = Program.objects.create(
@@ -101,3 +103,55 @@ class AddProgramView(APIView):
         except Program.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
+
+class CopyProgram(APIView):
+     def post(self,request):
+          print('copy program call')
+          data=request.data
+          id=data.get('isCopyProgram')
+          program=Program.objects.get(id=id)
+          print('program get =>',program)
+          programactivities=ProgramActivityModel.objects.filter(program_id=id)
+        #   print('programactivite in copy =====>',programactivities)
+          print('get done')
+          serializer=ProgramSerializer(data=data)
+          if serializer.is_valid():
+            copyprogram=serializer.save()
+            for activity in programactivities:
+                ProgramActivityModel.objects.create(     
+                    program_id=copyprogram,  
+                    week_no=activity.week_no,
+                    activity_id=activity.activity_id,
+                    activity_type=activity.activity_type,
+                    language=activity.language,
+                    activity=activity.activity,
+                    brand=activity.brand,
+                    who=activity.who,
+                    completion_check=activity.completion_check,
+                    show_completed=activity.show_completed,
+                    location=activity.location,
+                    user_duration=activity.user_duration,
+                    teamlead_duration=activity.teamlead_duration,
+                    coach_duration=activity.coach_duration,
+                    coach_type=activity.coach_type,
+                    travel_time=activity.travel_time,
+                    url=activity.url,
+                    amount=activity.amount,
+                    file=activity.file,
+                    upload_possible=activity.upload_possible,
+                    activity_description=activity.activity_description,
+                    activity_name=activity.activity_name,
+                    send_reminder=activity.send_reminder,
+                    show_in_task=activity.show_in_task,
+                    add_comment_option=activity.add_comment_option,
+                    indicate_when_completed=activity.indicate_when_completed,
+                    day=activity.day,
+                    time=activity.time,
+                )
+                
+            print('copied program=>',copyprogram)
+            return Response({
+                    'status':'200 ok ',
+                    'message':'Program copied successfully'
+                },status=status.HTTP_200_OK)
+                         

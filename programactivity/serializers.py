@@ -9,11 +9,6 @@ class ProgramActivitySerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
-
-    # def validate_time(self, value):
-    #     if value == "":
-    #         return None
-    #     return value
 def combinedata(data):
   
     activity_id=data.get('activity_id')
@@ -67,7 +62,7 @@ def combinedata(data):
             'add_comment_option': activity.add_comment_option,
             'indicate_when_completed': activity.indicate_when_completed,
         }
-        print('last me aaya combine me ')
+        print('last me aaya combine me ',data)
         return data
     return Response({
         'message':'activity with this id not exit',

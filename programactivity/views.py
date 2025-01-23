@@ -252,8 +252,39 @@ class ActivityDelete(APIView):
                     return Response({
                         'status': 'error',
                         'message': 'There is some server error',
-                        'data': None
+                        'data': str(e)
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)           
 
-                
-             
+class CopyWeek(APIView):
+     def post(self ,request):
+        try:
+            data=request.data
+            program_id=data.get('program_id')
+            week_no=data.get('week_no')
+            newWeek=data.get('newWeek')
+            print('data=>',data)
+            weekActivities=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
+            print('weekactivities get',weekActivities)
+            for activity in weekActivities:
+                data={
+                        'program_id':program_id,
+                        'activity_id':activity.activity_id,
+                        'week_no':newWeek,
+                        'day':activity.day,
+                        'time':activity.time,
+                }
+                newProgramActivity=combinedata(data)
+                serializer=ProgramActivitySerializer(data=newProgramActivity)
+                if serializer.is_valid():
+                        serializer.save()
+            return Response({
+                            'message':'data come',
+                            'status':'200ok'
+                            },status=status.HTTP_200_OK)            
+        except Exception as e :
+            print(f'Server error: {str(e)}')
+            return Response({
+                        'status': 'error',
+                        'message': 'There is some server error',
+                        'data': str(e)
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)   

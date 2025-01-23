@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'activity',
     'activityapp',
     'program',
-    'programactivity'
+    'programactivity',
+    'consent',
+    'gdprRequest'
 
 ]
 
@@ -84,10 +86,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
 FRONTEND_URL = 'http://localhost:5173/reset/' 
+# print('data-',os.getenv('DATABASE'))
 # Database
 print('data =>',os.getenv('DATABASE'))
 DATABASES = {
-   
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DATABASE'),
