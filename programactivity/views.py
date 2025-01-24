@@ -265,6 +265,15 @@ class CopyWeek(APIView):
             print('data=>',data)
             weekActivities=ProgramActivityModel.objects.filter(program_id=program_id,week_no=week_no)
             print('weekactivities get',weekActivities)
+            if weekActivities.count()<=1:
+                  program=Program.objects.get(id=program_id)
+                  response= ProgramActivityModel.objects.create(
+                    week_no=newWeek,
+                    program_id=program)
+                  return Response({
+                            'message':'week copy successful',
+                            'status':'200 ok'
+                            },status=status.HTTP_200_OK)   
             for activity in weekActivities:
                 data={
                         'program_id':program_id,
@@ -278,8 +287,8 @@ class CopyWeek(APIView):
                 if serializer.is_valid():
                         serializer.save()
             return Response({
-                            'message':'data come',
-                            'status':'200ok'
+                            'message':'week copy successful',
+                            'status':'200 ok'
                             },status=status.HTTP_200_OK)            
         except Exception as e :
             print(f'Server error: {str(e)}')
