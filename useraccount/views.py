@@ -46,7 +46,7 @@ class UserAccountView(APIView):
             "status":"404 not found",
         },status=status.HTTP_404_NOT_FOUND)
     
-
+# user account create view  multiple=true
 class UserAccountCreateView(APIView):
     def post(self, request):
         try:
@@ -113,6 +113,8 @@ class UserAccountCreateView(APIView):
 
 
 
+
+# //user account delete view
 class UserAccountDeleteView(APIView):
     def delete(self,request,pk):
         user_account=UserAccountModel.objects.get(id=pk)

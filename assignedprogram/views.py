@@ -1,52 +1,49 @@
-from rest_framework.views import APIView
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import Activity
-from .serializers import ActivitySerializer
+from .models import AssignedProgramModel
+from .serializers import AssignedProgramSerializer
 from lyvupapp.pagination import Pagination
-
-
-class ActivityView(APIView):
+from rest_framework.views import APIView
+# Create your views here.
+class AssigendProgramView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = [ 'id', 'activity_type', 'language', 'activity', 'brand', 'who', 
-         'completion_check', 'send_reminder']
-    ordering_fields = ['id','activity_name','activity_description','activity_type', 'language', 'activity', 'brand', 'who', 
-         'completion_check', 'send_reminder',]
-    filterset_fields = ['id', 'activity_type', 'language', 'activity', 'brand', 'who', 
-        'completion_check']
+    search_fields = ['id','program_id','assign_to' ]
+    ordering_fields = ['id','program_id','assign_to','assign_type' ]
+    filterset_fields = ['id','program_id','assign_to','assign_type' ]
     pagination_class = Pagination
 
     def get(self, request, pk=None):
         try:
             if pk:
-                activity = Activity.objects.get(id=pk)
-                serializer = ActivitySerializer(activity, context={'request': request})
+                assignedProgram = AssignedProgramModel.objects.get(id=pk)
+                serializer = AssignedProgramSerializer(assignedProgram, context={'request': request})
                 return Response({
                     'status': 'success',
-                    'message': 'activity retrieved successfully',
+                    'message': 'assignedProgram retrieved successfully',
                     'data': serializer.data
-                }, status=status.HTTP_200_OK)   
-            
-            activitys = Activity.objects.all()
-            activitys = DjangoFilterBackend().filter_queryset(request, activitys, self)
-            activitys = SearchFilter().filter_queryset(request, activitys, self)
-            activitys = OrderingFilter().filter_queryset(request, activitys, self)
+                }, status=status.HTTP_200_OK)
 
+            assignedPrograms = AssignedProgramModel.objects.all().order_by('id')
+            
+            assignedPrograms = DjangoFilterBackend().filter_queryset(request, assignedPrograms, self)
+            assignedPrograms = SearchFilter().filter_queryset(request, assignedPrograms, self)
+            assignedPrograms = OrderingFilter().filter_queryset(request, assignedPrograms, self)
             paginator = self.pagination_class()
-            paginated_activitys = paginator.paginate_queryset(activitys, request)
-            serializer = ActivitySerializer(paginated_activitys, many=True, context={'request': request})
+            paginated_assignedPrograms = paginator.paginate_queryset(assignedPrograms, request)
+            serializer = AssignedProgramSerializer(paginated_assignedPrograms, many=True, context={'request': request})
             return paginator.get_paginated_response(serializer.data)
 
-        except Activity.DoesNotExist:
+        except AssignedProgramModel.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'activity not found',
+                'message': 'assignedProgram Request not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -60,19 +57,17 @@ class ActivityView(APIView):
     def post(self, request):
         try:
             data = request.data
-            # data['is_active'] = True
-            # data['is_deleted'] = False
-            print('request data ',data)
-            serializer = ActivitySerializer(data=data, context={'request': request})
+            print('data=',data)
+            serializer = AssignedProgramSerializer(data=data, context={'request': request})
 
             if serializer.is_valid():
-                activity = serializer.save()
+                assignedProgram = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'activity created successfully',
+                    'message': 'assignedProgram created successfully',
                     'data': serializer.data
                 }, status=status.HTTP_201_CREATED)
-            print("serializer",serializer)
+
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -88,22 +83,21 @@ class ActivityView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk):
-        return self._update_activity(request, pk, partial=False)
+        return self._update_assignedProgram(request, pk, partial=True)
 
     def patch(self, request, pk):
-        return self._update_activity(request, pk, partial=True)
-    def _update_activity(self, request, pk, partial=False):
+        return self._update_assignedProgram(request, pk, partial=True)
+
+    def _update_assignedProgram(self, request, pk, partial=True):
         try:
-            activity = Activity.objects.get(id=pk)
-            serializer = ActivitySerializer(activity, data=request.data, partial=partial, context={'request': request})
+            assignedProgram = AssignedProgramModel.objects.get(id=pk)
+            serializer = AssignedProgramSerializer(assignedProgram, data=request.data, partial=partial, context={'request': request})
 
             if serializer.is_valid():
-                # Set the updated_by field to the current user
-                activity.updated_by = request.user
-                activity = serializer.save()
+                assignedProgram = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'activity updated successfully',
+                    'message': 'assignedProgram Request updated successfully',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -113,10 +107,10 @@ class ActivityView(APIView):
                 'data': serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        except Activity.DoesNotExist:
+        except AssignedProgramModel.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'activity not found',
+                'message': 'assignedProgram Request not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -129,23 +123,20 @@ class ActivityView(APIView):
 
     def delete(self, request, pk):
         try:
-            print("pk=>",pk)
-            activity = Activity.objects.get(id=pk)
-            # activity.delete()
-            
-            # activity.is_deleted = 1
-            # activity.is_active = 0  
-            activity.delete()
+            assignedProgram = AssignedProgramModel.objects.get(id=pk)
+            # assignedProgram.is_deleted = True
+            assignedProgram.is_deleted = 1 
+
+            assignedProgram.delete()
             return Response({
                 'status': 'success',
-                'message': 'activity deleted successfully',
-                # 'data': None
+                'message': 'assignedProgram Request deleted successfully',
             }, status=status.HTTP_204_NO_CONTENT)
 
-        except Activity.DoesNotExist:
+        except AssignedProgramModel.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'activity not found',
+                'message': 'assignedProgram Request not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:

@@ -3,13 +3,8 @@ services:
     build: .
     container_name: django_app
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    # volumes:
-    #   - .:/app
-    # environment:
-    #   - DB_NAME=lyvup_db
-    #   - DB_USER=amit
-    #   - DB_PASSWORD=we2code
-    #   - DB_HOST=postgres-db
+    volumes:
+      - .:/backend
     ports:
       - "8000:8000"
     # networks:

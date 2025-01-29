@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'program',
     'programactivity',
     'consent',
-    'gdprRequest'
-
+    'gdprRequest',
+    'assignedprogram',
 ]
 
 MIDDLEWARE = [
@@ -100,7 +100,7 @@ DATABASES = {
     # }
   'default': {
         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'lyvup_db',
+        'NAME': 'lyvup_db',
         'USER': 'postgres',     
         'PASSWORD': 'we2code',
         'HOST': 'localhost',          
