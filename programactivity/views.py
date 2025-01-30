@@ -48,10 +48,9 @@ class ProgramActivityView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     def post(self,request):
@@ -72,6 +71,12 @@ class ProgramActivityView(APIView):
                         'message': 'Activity not found',
                         'data': None
                     }, status=status.HTTP_404_NOT_FOUND)
+                except Exception as e:
+                    return Response({
+                        'status': 'error',
+                        'message': f'An unexpected internal server error occurred: {str(e)}',
+                        'data': None
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
                 print('week add  ')
                 programActivitys=ProgramActivityModel.objects.filter(program_id=program_id,week_no__gte=week_no)
@@ -180,10 +185,28 @@ class ProgramActivityView(APIView):
             serializer = ProgramActivitySerializer(week, data=request.data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    'status': 'success',
+                    'message': 'Program activity updated successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
+            return Response({
+                'status': 'error',
+                'message': 'Validation error',
+                'data': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
         except ProgramActivityModel.DoesNotExist:
-            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                'status': 'error',
+                'message': 'Week Activity not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 class ActivityDelete(APIView):
     def post(self,request):
         try:
@@ -271,8 +294,8 @@ class CopyWeek(APIView):
                     week_no=newWeek,
                     program_id=program)
                   return Response({
+                            'status':'200 ok',
                             'message':'week copy successful',
-                            'status':'200 ok'
                             },status=status.HTTP_200_OK)   
             for activity in weekActivities:
                 data={

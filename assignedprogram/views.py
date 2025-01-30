@@ -47,10 +47,9 @@ class AssigendProgramView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -75,10 +74,9 @@ class AssigendProgramView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -114,10 +112,9 @@ class AssigendProgramView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -131,18 +128,18 @@ class AssigendProgramView(APIView):
             return Response({
                 'status': 'success',
                 'message': 'assignedProgram Request deleted successfully',
-            }, status=status.HTTP_204_NO_CONTENT)
+                'data':'None'
+            }, status=status.HTTP_200_OK)
 
         except AssignedProgramModel.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'assignedProgram Request not found',
-                'data': None
+                'data': 'None'
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
-                'data': None
+                'message': f'An unexpected internal server error occurred: {str(e)}',
+                'data': 'None'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

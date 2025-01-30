@@ -49,10 +49,9 @@ class ConsentAPIView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -77,10 +76,9 @@ class ConsentAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -116,35 +114,31 @@ class ConsentAPIView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, pk):
         try:
             consent = ConsentModel.objects.get(id=pk)
-            # consent.is_deleted = True
-            consent.is_deleted = 1 
-
             consent.delete()
             return Response({
                 'status': 'success',
                 'message': 'consent deleted successfully',
-            }, status=status.HTTP_204_NO_CONTENT)
+                'data':'None'
+            }, status=status.HTTP_200_OK)
 
         except ConsentModel.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'consent not found',
-                'data': None
+                'data': 'None'
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
-                'data': None
+                'message': f'An unexpected internal server error occurred: {str(e)}',
+                'data': 'None'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

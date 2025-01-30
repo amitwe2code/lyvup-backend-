@@ -50,10 +50,10 @@ class ActivityView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
+            print('server error:', str(e))
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message':  f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -80,10 +80,10 @@ class ActivityView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(f'Server error: {str(e)}')
+            print('server error:', str(e))
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message':  f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -120,10 +120,10 @@ class ActivityView(APIView):
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
+            print('server error:', str(e))
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
+                'message':  f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -131,27 +131,23 @@ class ActivityView(APIView):
         try:
             print("pk=>",pk)
             activity = Activity.objects.get(id=pk)
-            # activity.delete()
-            
-            # activity.is_deleted = 1
-            # activity.is_active = 0  
             activity.delete()
             return Response({
                 'status': 'success',
-                'message': 'activity deleted successfully',
-                # 'data': None
-            }, status=status.HTTP_204_NO_CONTENT)
-
+                'message': ' not found',
+                'data': 'None'
+            }, status=status.HTTP_200_OK)
+            
         except Activity.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'activity not found',
-                'data': None
+                'data': 'None'
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f'Server error: {str(e)}')
+            print('server error:', str(e))
             return Response({
                 'status': 'error',
-                'message': 'There is some server error',
-                'data': None
+                'message':  f'An unexpected internal server error occurred: {str(e)}',
+                'data': 'None'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

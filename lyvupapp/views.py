@@ -94,7 +94,7 @@ class LoginView(APIView):
                 'status': 'error',
                 'code': 'INTERNAL_SERVER_ERROR',
                 'message': 'something goes to wrong',
-                'errors': str(e),
+                'errors': str(e),   
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         

@@ -6,10 +6,10 @@ from .models import UserModel
 from .serializers import UserSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 # from .custom_auth import CustomJWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.permissions import IsAuthenticated
 from lyvupapp.pagination import Pagination
 import os
 
@@ -40,14 +40,20 @@ class UserAPIView(APIView):
     def get(self, request, pk=None):
         try:
             if pk:
-                # Get single user
-                user = UserModel.objects.get(pk=pk)
-                serializer = UserSerializer(user, context={'request': request})
-                return Response({
-                    'status': 'success',
-                    'message': 'User retrieved successfully',
-                    'data': serializer.data
-                })
+                try : 
+                    user = UserModel.objects.get(pk=pk)
+                    serializer = UserSerializer(user, context={'request': request})
+                    return Response({
+                        'status': 'success',
+                        'message': 'User retrieved successfully',
+                        'data': serializer.data
+                    },status=status.HTTP_200_OK)
+                except UserModel.DoesNotExist:
+                    return Response({
+                        'status': 'error',
+                        'message': 'User not found, please check the provided ID',
+                        'data': None
+                    }, status=status.HTTP_404_NOT_FOUND)
             else:
                 # Get all users
                 users = UserModel.objects.all()
@@ -63,14 +69,14 @@ class UserAPIView(APIView):
         except UserModel.DoesNotExist:
             return Response({
                 'status': 'error',
-                'message': 'User not found',
+                'message': 'User not found, please check the provided ID',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print('server error:', str(e))
             return Response({
                 'status': 'error',
-                'message': 'there is some server error',
+                'message':  f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -91,10 +97,9 @@ class UserAPIView(APIView):
                             'status': 'error',
                             'message': validation_result['message'],
                             'data': None
-                        }, status=status.HTTP_400_BAD_REQUEST)
+                        }, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 user = serializer.save()
-                print('success response')
                 return Response({
                     'status': 'success',
                     'message': 'User created successfully',
@@ -111,7 +116,7 @@ class UserAPIView(APIView):
             print('server error')
             return Response({
                 'status': 'error',
-                'message': str(e),
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -154,7 +159,7 @@ class UserAPIView(APIView):
                     'status': 'success',
                     'message': 'User updated successfully',
                     'data': serializer.data
-                })
+                },status=status.HTTP_201_CREATED)
             
             return Response({
                 'status': 'error',
@@ -171,7 +176,7 @@ class UserAPIView(APIView):
         except Exception as e:
             return Response({
                 'status': 'error',
-                'message': 'internal error he ',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -180,25 +185,26 @@ class UserAPIView(APIView):
         print('pk=',pk)
         try:
             user = UserModel.objects.get(pk=pk)
-             
-            user.is_deleted = 1
-            # intervention.is_active = 0  
-            user.delete()
-            # Delete profile picture if exists
             if user.profile_picture:
                 if os.path.isfile(user.profile_picture.path):
                     os.remove(user.profile_picture.path)
-            
             # user.delete()
+            user.delete()
             return Response({
                 'status': 'success',
                 'message': 'User deleted successfully',
-                'data': None
-            }, status=status.HTTP_204_NO_CONTENT)
+                'data': 'None'
+            }, status=status.HTTP_200_OK)
 
         except UserModel.DoesNotExist:
             return Response({
                 'status': 'error',
                 'message': 'User not found',
-                'data': None
+                'data': 'None'
             }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'An unexpected internal server error occurred: {str(e)}',
+                'data': 'None'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

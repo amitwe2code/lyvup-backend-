@@ -1,6 +1,6 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
+from rest_framework import status
 class Pagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
@@ -20,4 +20,4 @@ class Pagination(PageNumberPagination):
                     'total_pages': self.page.paginator.num_pages,
                 }
             }
-        })
+        },status=status.HTTP_200_OK)
