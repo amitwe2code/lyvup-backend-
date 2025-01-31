@@ -67,11 +67,12 @@ class ActivityView(APIView):
 
             if serializer.is_valid():
                 activity = serializer.save()
+                print('activity=>',activity)
                 return Response({
                     'status': 'success',
-                    'message': 'activity created successfully',
+                    'message': f'{activity} activity created',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
             print("serializer",serializer)
             return Response({
                 'status': 'error',
@@ -103,7 +104,7 @@ class ActivityView(APIView):
                 activity = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'activity updated successfully',
+                    'message': f'{activity} activity updated',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -134,7 +135,7 @@ class ActivityView(APIView):
             activity.delete()
             return Response({
                 'status': 'success',
-                'message': ' not found',
+                'message': f'{activity} activity deleted',
                 'data': 'None'
             }, status=status.HTTP_200_OK)
             

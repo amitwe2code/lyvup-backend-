@@ -102,14 +102,13 @@ class UserAPIView(APIView):
                 user = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'User created successfully',
+                    'message': f'{user} user created ',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
-            print('any serailizer error')
+                }, status=status.HTTP_200_OK)
             return Response({
-                'status': 'error',
+                'status': 'error',  
                 'message': 'Validation error',
-                'data': serializer.errors
+                'error': serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
@@ -157,9 +156,9 @@ class UserAPIView(APIView):
                 user = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'User updated successfully',
+                    'message': f'{user} user updated ',
                     'data': serializer.data
-                },status=status.HTTP_201_CREATED)
+                },status=status.HTTP_200_OK)
             
             return Response({
                 'status': 'error',
@@ -192,7 +191,7 @@ class UserAPIView(APIView):
             user.delete()
             return Response({
                 'status': 'success',
-                'message': 'User deleted successfully',
+                'message':f'{user} user deleted ',
                 'data': 'None'
             }, status=status.HTTP_200_OK)
 

@@ -24,7 +24,7 @@ class ActivityActionType(models.Model):
 
 
     def __str__(self):
-        return self.activity_type
+        return self.activity
 
     # class Meta:
     #     db_table = 'activity_action_type'

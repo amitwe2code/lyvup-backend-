@@ -43,14 +43,14 @@ class AddProgramView(APIView):
                 
                 return Response({
                     'status': 'success',
-                    'message': 'Program created successfully',
+                    'message': f'{program} program created ',
                     'data': {'id': program.id,
                              'name': serial_data.get("name"),
                              'description': serial_data.get("description"),
                              'written_by': serial_data.get("written_by"),
                              'version': serial_data.get("version"),
                              'price': serial_data.get("price")}
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -113,9 +113,9 @@ class AddProgramView(APIView):
                 serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'consent created successfully',
+                    'message': f'{program} program updated ',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -131,13 +131,21 @@ class AddProgramView(APIView):
     def delete(self, request, pk):
         try:
             program = Program.objects.get(pk=pk)
+            print('request come ',program)
             # program.is_deleted = 1
-            program.save()
-            program.soft_delete()
+            # program.save()
+            programactivities=ProgramActivityModel.objects.filter(program_id=program)
+            print('programactivities=>',programactivities)
+            for activity in programactivities:
+                print('inside perform')
+                activity.delete()
+
+            program.delete()
+            print('response=>',program)
             return Response({
                 'status': 'success',
-                'message': 'program deleted successfully',
-                'data':'None'
+                'message': f'{program} program deleted',
+                'data': 'None'
             }, status=status.HTTP_200_OK)
         except Program.DoesNotExist:
             return Response({
@@ -202,6 +210,7 @@ class CopyProgram(APIView):
             print('copied program=>',copyprogram)
             return Response({
                     'status':'200 ok ',
-                    'message':'Program copied successfully'
+                    'message':f'Program {program} copied successfully',
+                    'data':'none'
                 },status=status.HTTP_200_OK)
                          

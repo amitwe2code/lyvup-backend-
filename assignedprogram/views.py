@@ -63,9 +63,9 @@ class AssigendProgramView(APIView):
                 assignedProgram = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'assignedProgram created successfully',
+                    'message': 'Assigned Program created ',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 'status': 'error',
@@ -95,7 +95,7 @@ class AssigendProgramView(APIView):
                 assignedProgram = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'assignedProgram Request updated successfully',
+                    'message': 'Assigned Program updated ',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -127,7 +127,7 @@ class AssigendProgramView(APIView):
             assignedProgram.delete()
             return Response({
                 'status': 'success',
-                'message': 'assignedProgram Request deleted successfully',
+                'message': 'Assigned Program deleted ',
                 'data':'None'
             }, status=status.HTTP_200_OK)
 

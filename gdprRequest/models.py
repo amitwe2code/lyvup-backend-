@@ -27,4 +27,4 @@ class GDPRRequestModel(models.Model):
     class Meta:
         db_table = 'gdprrequest'
     def __str__(self):
-        return f"GDPR Request {self.id} for User {self.user_id}"
+        return f"GDPR for User {self.user_id}"

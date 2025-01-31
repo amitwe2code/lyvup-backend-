@@ -125,7 +125,7 @@ class SignupView(APIView):
                     'status': 'success',
                     'message': 'User created successfully',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
             print('any serailizer error')
             return Response({
                 'status': 'error',

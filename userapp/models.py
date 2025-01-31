@@ -38,15 +38,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     ]
 
     email = models.EmailField(unique=True)
-    name = models.CharField(
-        max_length=100,
-        validators=[
-            RegexValidator(
-                regex=r'^[a-zA-Z\s]{2,}$',
-                message='Name must contain only letters and spaces, minimum 2 characters'
-            )
-        ]
-    )
+    name = models.CharField( max_length=30)
     account_id = models.ForeignKey(
         AccountModel,
         on_delete=models.CASCADE,

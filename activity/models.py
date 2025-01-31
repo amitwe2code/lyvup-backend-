@@ -90,5 +90,5 @@ class Activity(models.Model):
         super(Activity, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.activity if self.activity else "No activity specified"
+        return self.activity_name 
    

@@ -63,9 +63,9 @@ class GDPRAPIView(APIView):
                 gdpr = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'gdpr created successfully',
+                    'message': f'{gdpr} created',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 'status': 'error',
@@ -94,7 +94,7 @@ class GDPRAPIView(APIView):
                 gdpr = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'gdpr Request updated successfully',
+                    'message':  f'{gdpr} updated ',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -126,7 +126,7 @@ class GDPRAPIView(APIView):
             gdpr.delete()
             return Response({
                 'status': 'success',
-                'message': 'gdpr Request deleted successfully',
+                'message': f'{gdpr} deleted ',
                 'data':'None'
             }, status=status.HTTP_200_OK)
 

@@ -20,7 +20,7 @@ class UserAccountModel(models.Model):
 
 
     def __str__(self):
-        return f'{self.user.name} - {self.account.account_name}'
+        return f'{self.user.name} in {self.account.account_name}'
     
     class Meta:
         db_table = 'user_account'

@@ -63,9 +63,9 @@ class ActivityActionTypeAPIView(APIView):
                 activity_action_type = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'Activity Action Type created successfully',
+                    'message':  f'{activity_action_type} activity type deleted',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 'status': 'error',
@@ -96,7 +96,7 @@ class ActivityActionTypeAPIView(APIView):
                 activity_action_type = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'Activity Action Type updated successfully',
+                    'message':  f'{activity_action_type} activity type updated',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -129,7 +129,7 @@ class ActivityActionTypeAPIView(APIView):
             activity_action_type.delete()
             return Response({
                 'status': 'success',
-                'message': 'Activity Action Type deleted successfully',
+                'message': f'{activity_action_type} activity type deleted',
                 'data':'None'
             }, status=status.HTTP_200_OK)
 
@@ -140,7 +140,7 @@ class ActivityActionTypeAPIView(APIView):
                 'data': 'None'
             }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print('server error:', str(e))
+            print('server error:', str(e))  
             return Response({
                 'status': 'error',
                 'message':  f'An unexpected internal server error occurred: {str(e)}',

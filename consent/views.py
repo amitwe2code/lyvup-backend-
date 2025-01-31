@@ -65,9 +65,9 @@ class ConsentAPIView(APIView):
                 consent = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'consent created successfully',
+                    'message': f'{consent} created ',
                     'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 'status': 'error',
@@ -97,7 +97,7 @@ class ConsentAPIView(APIView):
                 consent = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'consent updated successfully',
+                    'message':  f'{consent} updated ',
                     'data': serializer.data
                 }, status=status.HTTP_200_OK)
 
@@ -126,7 +126,7 @@ class ConsentAPIView(APIView):
             consent.delete()
             return Response({
                 'status': 'success',
-                'message': 'consent deleted successfully',
+                'message': f'{consent} deleted ',
                 'data':'None'
             }, status=status.HTTP_200_OK)
 
@@ -142,3 +142,4 @@ class ConsentAPIView(APIView):
                 'message': f'An unexpected internal server error occurred: {str(e)}',
                 'data': 'None'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    

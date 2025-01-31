@@ -113,7 +113,7 @@ class UserAccountCreateView(APIView):
                 "already_connected": already_connected
             }
             
-            return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except UserModel.DoesNotExist:
             return Response({

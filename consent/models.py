@@ -25,4 +25,4 @@ class ConsentModel(models.Model):
         db_table = 'consent_table'  
 
     def __str__(self):
-        return f"Consent {self.id} for User {self.user_id}"
+        return f"Consent for User {self.user_id}"

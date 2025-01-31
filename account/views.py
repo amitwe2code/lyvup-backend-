@@ -66,12 +66,12 @@ class AccountAPIView(APIView):
         try:
             serializer = AccountSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                account=serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': 'User created successfully',
+                    'message': f'{account} account created ',
                     'data': serializer.data
-                    }, status=status.HTTP_201_CREATED)
+                    }, status=status.HTTP_200_OK)
             return Response({
                     'status': 'error',
                     'message': 'Validation error',
@@ -90,12 +90,13 @@ class AccountAPIView(APIView):
             account = AccountModel.objects.get(pk=pk)
             serializer =  AccountSerializer(account, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                account= serializer.save()
+                
                 return Response({
                     'status': 'success',
-                    'message': 'Account updated successfully',
+                    'message': f'{account} account updated ',
                     'data': serializer.data
-                },status=status.HTTP_201_CREATED)
+                },status=status.HTTP_200_OK)
             return Response({
                 'status': 'error',
                 'message': 'Validation error',
@@ -120,10 +121,9 @@ class AccountAPIView(APIView):
             # account.is_deleted = 1
             # account.save()
             account.delete()
-            print('ye chla ')
             return Response({
                 'status': 'success',
-                'message': 'account deleted successfully',
+                'message': f'{account} account deleted',
                 'data': 'none'
             }, status=status.HTTP_200_OK)
         except AccountModel.DoesNotExist:
