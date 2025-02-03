@@ -15,10 +15,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode  
 from .serializers import ForgotPasswordSerializer,ResetPasswordSerializer,LoginSerializer
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from userapp.serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.authtoken.models import Token
 
 
 class LoginView(APIView):
@@ -236,6 +240,7 @@ class LogoutView(APIView):
                     'data': None
                 }, status=status.HTTP_400_BAD_REQUEST)
 
+            # Blacklist the refresh token
             try:
                 refresh = RefreshToken(refresh_token)
                 refresh.blacklist()  
@@ -246,10 +251,10 @@ class LogoutView(APIView):
                     'data': None
                 }, status=status.HTTP_400_BAD_REQUEST)
 
+            # Blacklist the access token
             try:
                 access = AccessToken(access_token)
-               
-                self.blacklist_access_token(access_token)  
+                self.blacklist_access_token(access)  
             except TokenError as e:
                 return Response({
                     'status': 'error',
@@ -271,5 +276,27 @@ class LogoutView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def blacklist_access_token(self, access_token):
-        from datetime import datetime
-        
+        OutstandingToken.objects.filter(token=access_token).update(blacklisted=True)
+        print('run ---------------------')
+
+class TokenValidationView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        # Agar token valid hai, request.auth mein user object hoga
+        user = request.user  # Authenticated user
+        print('request token user =>',user)
+        if user.is_authenticated:
+            return Response({
+                "status": "success",
+                "message": "Token is valid.",
+                "user": user.name
+            },status=status.HTTP_200_OK)
+        else:
+            print('not authenticate')
+            return Response({
+                'status':'expired',
+                'message':'session expird',
+                'data':AuthenticationFailed("Token is invalid or expired.")
+            },status=status.HTTP_201_CREATED)
