@@ -8,7 +8,6 @@ from userapp.models import UserModel
 from mailersend import emails
 from django.conf import settings
 from .mail_service import mail_service
-from .mail_service import MailerSendService
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator  
@@ -43,7 +42,6 @@ class LoginView(APIView):
             
             try:
                 user = UserModel.objects.get(email=email)
-                print('password in user=>',user.password)
             except UserModel.DoesNotExist:
                 return Response({
                     'status': 'error',
@@ -61,14 +59,14 @@ class LoginView(APIView):
                     'errors': None,
                     'data': None
                 }, status=status.HTTP_401_UNAUTHORIZED)
-            # try:
-            #     print(f"Attempting to send email to: {user.email}")
-            #     mail_service.send_email()
+            try:
+                print(f"Attempting to send email to: {user.email}")
+                mail_service.send_email()
 
-            #     print("Email sent successfully")    
-            # except Exception as e:
-            #     print(f"Email sending error: {str(e)}")
-            #     print(f"Continuing login process despite email error")
+                print("Email sent successfully")    
+            except Exception as e:
+                print(f"Email sending error: {str(e)}")
+                print(f"Continuing login process despite email error")
 
             refresh = RefreshToken.for_user(user)
             refresh['user_id'] = user.id  # Explicitly add user ID
@@ -151,46 +149,27 @@ class ForgotPasswordView(APIView):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            print('email in forget=',email)
             user = get_user_model().objects.get(email=email)
-        print('request come ')
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(str(user.pk).encode())
         reset_url = f"{settings.FRONTEND_URL}?uid={uid}&token={token}"
         print(f"Generated reset URL: {reset_url}")
-        mail_body = {
-            "subject": "Password Reset Request",
-            "html_content": f"<h1>Password Reset</h1><p>Click the link below to reset your password:</p><p><a href='{reset_url}'>Reset Password</a></p>",
-            "plaintext_content": f"Password Reset: Visit the following link to reset your password: {reset_url}",
-            "mail_from": {
-                "name": "Your App",
-                "email": "MS_GTsCGY@trial-pxkjn41epk6lz781.mlsender.net"
-            },
-            "recipients": [{
-                "email": user.email
-            }]
-        }
         try:
-            mail_service = MailerSendService()  
-            response = mail_service.send_email(mail_body) 
-            if response.status_code == 202:  
-                return Response({
+            response = mail_service.forget_mail({'email':user.email,'url':reset_url}) 
+            print('response=>',response)
+            return Response({
                     'status': 'success',
-                    'message': 'Password reset email sent successfully',
-                    'reset_url': reset_url
+                    'message': 'Password reset email sent successfully in your mail',
+                    # 'reset_url': reset_url
                 }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    'status': 'error',
-                    'message': f"Failed to send email. Status code: {response.status_code}, Response: {response.text}",
-                    'data': None
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
         except Exception as e:
             return Response({
                 'status': 'error',  
                 'message': f"Error sending email: {str(e)}",
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class ResetPasswordView(APIView):
    def post(self, request, uidb64, token):
         try:

@@ -85,7 +85,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lyvupapp.wsgi.application'
-FRONTEND_URL = 'http://localhost:5173/reset/' 
+FRONTEND_URL = 'http://localhost:5050/reset/' 
 # print('data-',os.getenv('DATABASE'))
 # Database
 DATABASES = {
@@ -183,11 +183,11 @@ CORS_ALLOWED_ORIGINS = [
     
 
 
-# # MailerSend Email Settings
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.mailersend.net'  # MailerSend SMTP server
-# EMAIL_PORT = 587  # SMTP port for MailerSend
-# EMAIL_USE_TLS = True  # TLS encryption
-# EMAIL_HOST_USER = 'MS_c3k66C@trial-pq3enl6o297l2vwr.mlsender.net'  # Your MailerSend email address
-# EMAIL_HOST_PASSWORD = 'keJgvvbM2EjQp2Pe'  # API key as the password
+# MailerSend Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailersend.net'  # MailerSend SMTP server
+EMAIL_PORT = 587  # SMTP port for MailerSend
+EMAIL_USE_TLS = True  # TLS encryption
+EMAIL_HOST_USER = 'MS_lTm1Jr@trial-3zxk54veprqljy6v.mlsender.net'  # Your MailerSend email address
+EMAIL_HOST_PASSWORD = 'mssp.uvzcCt3.pr9084z1rw8gw63d.i8ftkhr'  # API key as the password
 
