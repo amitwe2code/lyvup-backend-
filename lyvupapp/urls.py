@@ -30,6 +30,7 @@ urlpatterns = [
     path('gdpr/',include('gdprRequest.urls')),
     path('assigendprogram/',include('assignedprogram.urls')),
     path('week/',include('programactivity.urls'),name='week'),
+    path('notification/',include('notification.urls'),name='notification'),  
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -8,6 +8,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import AssignedProgramModel
 from .serializers import AssignedProgramSerializer
 from lyvupapp.pagination import Pagination
+# from notification.utils import create_notification
 from rest_framework.views import APIView
 # Create your views here.
 class AssigendProgramView(APIView):
@@ -58,6 +59,14 @@ class AssigendProgramView(APIView):
             data = request.data
             print('data=',data)
             serializer = AssignedProgramSerializer(data=data, context={'request': request})
+            # notification = create_notification(
+            #     from_id=25,  # Sender (admin or the current logged in user)
+            #     from_type='superadmin',         # Sender type (can be 'user', 'admin', etc.)
+            #     to_id=19,             # Receiver user ID
+            #     to_type='superadmin',            # Receiver type ('user')
+            #     notification_type='program assigned',  # Notification type
+            #     message='program assign to team '           # The notification message
+            # )
 
             if serializer.is_valid():
                 assignedProgram = serializer.save()

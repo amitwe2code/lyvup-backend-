@@ -59,14 +59,14 @@ class LoginView(APIView):
                     'errors': None,
                     'data': None
                 }, status=status.HTTP_401_UNAUTHORIZED)
-            try:
-                print(f"Attempting to send email to: {user.email}")
-                mail_service.send_email()
+            # try:
+            #     print(f"Attempting to send email to: {user.email}")
+            #     mail_service.send_email()
 
-                print("Email sent successfully")    
-            except Exception as e:
-                print(f"Email sending error: {str(e)}")
-                print(f"Continuing login process despite email error")
+            #     print("Email sent successfully")    
+            # except Exception as e:
+            #     print(f"Email sending error: {str(e)}")
+            #     print(f"Continuing login process despite email error")
 
             refresh = RefreshToken.for_user(user)
             refresh['user_id'] = user.id  # Explicitly add user ID
@@ -155,8 +155,9 @@ class ForgotPasswordView(APIView):
         reset_url = f"{settings.FRONTEND_URL}?uid={uid}&token={token}"
         print(f"Generated reset URL: {reset_url}")
         try:
+            # mail_send for forget 
             response = mail_service.forget_mail({'email':user.email,'url':reset_url}) 
-            print('response=>',response)
+            # print('response=>',response)
             return Response({
                     'status': 'success',
                     'message': 'Password reset email sent successfully in your mail',

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'consent',
     'gdprRequest',
     'assignedprogram',
+    'notification',
 ]
 
 MIDDLEWARE = [
